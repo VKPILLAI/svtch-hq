@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>SVTCH. Command Center — VK</title>
-<!-- BUILD v1.4 | 2026-03-15 | Added: Live GitHub Pages URL in Changelog, update workflow instructions -->
+<!-- BUILD v1.5 | 2026-03-15 | Added: Live presence indicator (top-right) — tab count via BroadcastChannel + Firebase upgrade path -->
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
 <style>
@@ -317,7 +317,29 @@ option{background:#1a1a1a;color:var(--t1)}
 .cl-desc{font-size:12px;color:var(--t2);line-height:1.65}
 .cl-new{font-family:var(--f2);font-size:8px;padding:1px 7px;border:1px solid rgba(29,184,122,.3);color:var(--green);background:rgba(29,184,122,.05);margin-left:8px;letter-spacing:.08em}
 
-/* ════ TIMELINE ════ */
+/* ════ PRESENCE INDICATOR ════ */
+#presence{
+  position:fixed;top:14px;right:18px;z-index:9000;
+  display:flex;align-items:center;gap:7px;
+  background:rgba(14,14,14,.85);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.07);
+  border-top:1px solid rgba(255,255,255,.11);
+  padding:5px 11px 5px 8px;
+  cursor:default;user-select:none;
+  transition:all .3s;
+}
+#presence:hover{border-color:rgba(255,222,88,.18)}
+.pr-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:background .3s}
+.pr-dot.online{background:var(--green);box-shadow:0 0 0 0 rgba(29,184,122,.4);animation:prblink 2s infinite}
+.pr-dot.offline{background:var(--red)}
+.pr-dot.away{background:var(--ac)}
+@keyframes prblink{0%{box-shadow:0 0 0 0 rgba(29,184,122,.4)}70%{box-shadow:0 0 0 5px rgba(29,184,122,0)}100%{box-shadow:0 0 0 0 rgba(29,184,122,0)}}
+.pr-text{font-family:var(--f2);font-size:8px;letter-spacing:.14em;text-transform:uppercase;transition:color .3s;white-space:nowrap}
+.pr-count{font-family:var(--f1);font-size:13px;color:var(--ac);letter-spacing:1px;line-height:1;transition:opacity .3s}
+.pr-divider{width:1px;height:10px;background:rgba(255,255,255,.1);flex-shrink:0}
+.pr-label{font-family:var(--f2);font-size:7px;letter-spacing:.14em;text-transform:uppercase;color:var(--t4)}
+</style>
 .tl-item{display:grid;grid-template-columns:92px 1fr;gap:16px;padding-bottom:22px}
 .tl-l{text-align:right;padding-top:3px}
 .tl-mo{font-family:var(--f2);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin-bottom:4px}
@@ -422,7 +444,7 @@ option{background:#1a1a1a;color:var(--t1)}
     <div class="sb-foot">
       <div class="sb-fn">Vijaykumar M Pillai</div>
       <div class="sb-fs">2171 Visual Universe<br/>SVTCH Creatives · 2026<br/>Data → localStorage</div>
-      <div style="margin-top:8px;font-family:var(--f2);font-size:8px;color:rgba(255,222,88,.35);letter-spacing:.1em;text-transform:uppercase;border-top:1px solid rgba(255,222,88,.07);padding-top:8px">Build v1.4 · 2026-03-15</div>
+      <div style="margin-top:8px;font-family:var(--f2);font-size:8px;color:rgba(255,222,88,.35);letter-spacing:.1em;text-transform:uppercase;border-top:1px solid rgba(255,222,88,.07);padding-top:8px">Build v1.5 · 2026-03-15</div>
     </div>
   </div>
 
@@ -722,7 +744,14 @@ option{background:#1a1a1a;color:var(--t1)}
       </div>
       <div class="gp"><div class="gp-inner" id="changelog-entries">
         <div class="cl-entry">
-          <div class="cl-ver">v1.4<span class="cl-new">latest</span></div>
+          <div class="cl-ver">v1.5<span class="cl-new">latest</span></div>
+          <div class="cl-meta">
+            <div class="cl-date">2026-03-15</div>
+            <div class="cl-desc">Added <b>live presence indicator</b> — top-right corner pill showing online status + active tab count in real time via BroadcastChannel API (no setup needed). Version B Firebase upgrade path pre-wired in code — uncomment + add Firebase config to get real cross-device live count. Indicator pulses green when live, red when offline, counts tabs when multiple open.</div>
+          </div>
+        </div>
+        <div class="cl-entry">
+          <div class="cl-ver">v1.4</div>
           <div class="cl-meta">
             <div class="cl-date">2026-03-15</div>
             <div class="cl-desc">Site is <b>live on GitHub Pages</b> at <a href="https://vkpillai.github.io/svtch-hq/" target="_blank" style="color:var(--ac);text-decoration:underline;text-underline-offset:3px">vkpillai.github.io/svtch-hq</a>. Added live URL and update workflow instructions to Changelog page. No download needed from this point — all future updates go directly through GitHub.</div>
@@ -765,6 +794,14 @@ option{background:#1a1a1a;color:var(--t1)}
   </main>
 </div>
 <div id="toast"></div>
+
+<div id="presence">
+  <div class="pr-dot online" id="pr-dot"></div>
+  <div class="pr-text" id="pr-text" style="color:var(--green)">Live</div>
+  <div class="pr-divider"></div>
+  <div class="pr-count" id="pr-count">1</div>
+  <div class="pr-label">tab</div>
+</div>
 
 <script>
 // CURSOR
@@ -1036,6 +1073,123 @@ function initPlaybook(){
     });
   });
 }
+
+// ═══════════════════════════════════
+// PRESENCE — VERSION A (BroadcastChannel)
+// Shows live tab count + online/offline status
+// No backend needed — works across tabs in same browser
+// ═══════════════════════════════════
+(function(){
+  const dot=document.getElementById('pr-dot');
+  const txt=document.getElementById('pr-text');
+  const cnt=document.getElementById('pr-count');
+  const lbl=document.querySelector('.pr-label');
+  const CHANNEL='svtch_hq_presence';
+  const TAB_ID=Date.now().toString(36)+Math.random().toString(36).slice(2);
+  let activeTabs=new Set([TAB_ID]);
+  let bc;
+
+  function updateUI(){
+    const online=navigator.onLine;
+    const n=activeTabs.size;
+    cnt.textContent=n;
+    lbl.textContent=n===1?'tab':'tabs';
+    if(!online){
+      dot.className='pr-dot offline';
+      txt.textContent='Offline';
+      txt.style.color='var(--red)';
+    } else if(n>1){
+      dot.className='pr-dot online';
+      txt.textContent='Live';
+      txt.style.color='var(--green)';
+      cnt.style.color='var(--green)';
+    } else {
+      dot.className='pr-dot online';
+      txt.textContent='Live';
+      txt.style.color='var(--green)';
+      cnt.style.color='var(--ac)';
+    }
+  }
+
+  try {
+    bc=new BroadcastChannel(CHANNEL);
+    bc.postMessage({type:'JOIN',id:TAB_ID});
+    bc.onmessage=e=>{
+      const {type,id,tabs}=e.data;
+      if(type==='JOIN'){
+        activeTabs.add(id);
+        bc.postMessage({type:'ACK',id:TAB_ID,tabs:[...activeTabs]});
+      } else if(type==='ACK'){
+        if(tabs) tabs.forEach(t=>activeTabs.add(t));
+      } else if(type==='LEAVE'){
+        activeTabs.delete(id);
+      }
+      updateUI();
+    };
+    window.addEventListener('beforeunload',()=>{
+      bc.postMessage({type:'LEAVE',id:TAB_ID});
+      bc.close();
+    });
+    setInterval(()=>{bc.postMessage({type:'JOIN',id:TAB_ID})},8000);
+  } catch(e){
+    // BroadcastChannel not supported — show basic online/offline only
+  }
+
+  window.addEventListener('online',updateUI);
+  window.addEventListener('offline',updateUI);
+  updateUI();
+
+  // ═══════════════════════════════════
+  // PRESENCE — VERSION B (Firebase Realtime DB)
+  // Uncomment and fill in your Firebase config to upgrade.
+  // Shows REAL cross-device live count — anyone with your URL counts.
+  //
+  // SETUP (5 min):
+  // 1. Go to console.firebase.google.com → New project → "svtch-hq"
+  // 2. Add a Web App → copy the firebaseConfig object below
+  // 3. Go to Realtime Database → Create database → Start in test mode
+  // 4. Replace the config below, uncomment the entire block, save & deploy
+  // ═══════════════════════════════════
+
+  /*
+  const FIREBASE_CONFIG = {
+    apiKey: "PASTE_YOUR_API_KEY",
+    authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
+    databaseURL: "https://PASTE_YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "PASTE_YOUR_PROJECT",
+    storageBucket: "PASTE_YOUR_PROJECT.appspot.com",
+    messagingSenderId: "PASTE_YOUR_SENDER_ID",
+    appId: "PASTE_YOUR_APP_ID"
+  };
+
+  const FB_SCRIPT = document.createElement('script');
+  FB_SCRIPT.src = 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js';
+  FB_SCRIPT.onload = () => {
+    const FB_DB_SCRIPT = document.createElement('script');
+    FB_DB_SCRIPT.src = 'https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js';
+    FB_DB_SCRIPT.onload = () => {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      const db = firebase.database();
+      const presenceRef = db.ref('svtch_hq/presence/' + TAB_ID);
+      const allPresenceRef = db.ref('svtch_hq/presence');
+      presenceRef.set({online:true, t:Date.now()});
+      presenceRef.onDisconnect().remove();
+      allPresenceRef.on('value', snap => {
+        const val = snap.val() || {};
+        const n = Object.keys(val).length;
+        activeTabs = new Set(Object.keys(val));
+        cnt.textContent = n;
+        lbl.textContent = n === 1 ? 'device' : 'devices';
+        cnt.style.color = n > 1 ? 'var(--green)' : 'var(--ac)';
+        updateUI();
+      });
+    };
+    document.head.appendChild(FB_DB_SCRIPT);
+  };
+  document.head.appendChild(FB_SCRIPT);
+  */
+
+})();
 
 // BOOT
 initHooks();initRevenue();initRoadmap();initContent();initClients();initNotes();initPlaybook();uDash();
