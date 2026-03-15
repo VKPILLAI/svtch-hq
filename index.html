@@ -1,12 +1,4220 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>SVTCH HQ</title>
-</head>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+        <title>SVTCH. Command Center — VK</title>
+        <!-- BUILD v1.3 | 2026-03-15 | Added: Playbook section with 30 step-by-step actions across 5 phases -->
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+        <style>
+            :root {
+                --bg: #111111;
+                --bg2: #161616;
+                --bg3: #1C1C1C;
+                --border: #2A2A2A;
+                --t1: #F4F1EC;
+                --t2: #B8B8B8;
+                --t3: #8A8A8A;
+                --t4: #5E5E5E;
+                --ac: #FFDE58;
+                --ach: #E6C94D;
+                --aca: #D4B843;
+                --acs: #1e1a06;
+                --red: #FF4444;
+                --green: #1DB87A;
+                --blue: #4A9EFF;
+                --purple: #9B7EFF;
+                --f1: 'Bebas Neue',sans-serif;
+                --f2: 'Space Mono',monospace;
+                --f3: 'DM Sans',sans-serif;
+                --g1: rgba(17,17,17,.7);
+                --g2: rgba(22,22,22,.75);
+                --g3: rgba(28,28,28,.8);
+                --blur: blur(28px);
+                --blur2: blur(16px);
+                --blur3: blur(10px);
+                --sb: 228px;
+            }
 
-<body>
+            *,*::before,*::after {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box
+            }
 
-<h1>Welcome to SVTCH</h1>
+            html,body {
+                height: 100%;
+                overflow: hidden;
+                background: var(--bg)
+            }
 
-</body>
+            body {
+                color: var(--t1);
+                font-family: var(--f3);
+                cursor: none
+            }
+
+            /* ─── CURSOR ─── */
+            .cur,.cur-r {
+                position: fixed;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 99999;
+                transform: translate(-50%,-50%)
+            }
+
+            .cur {
+                width: 9px;
+                height: 9px;
+                background: var(--ac);
+                mix-blend-mode: difference;
+                transition: width .18s,height .18s
+            }
+
+            .cur-r {
+                width: 34px;
+                height: 34px;
+                border: 1px solid rgba(255,222,88,.25);
+                z-index: 99998;
+                transition: left .07s,top .07s
+            }
+
+            /* ─── GLOBAL BG ─── */
+            #bg-shell {
+                position: fixed;
+                inset: 0;
+                z-index: 0;
+                pointer-events: none;
+                overflow: hidden
+            }
+
+            .bg-grid {
+                position: absolute;
+                inset: 0;
+                background-image: linear-gradient(rgba(42,42,42,.45) 1px,transparent 1px),linear-gradient(90deg,rgba(42,42,42,.45) 1px,transparent 1px);
+                background-size: 72px 72px
+            }
+
+            .bg-noise {
+                position: absolute;
+                inset: -50%;
+                width: 200%;
+                height: 200%;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+                opacity: .5
+            }
+
+            .bg-glow1 {
+                position: absolute;
+                top: -300px;
+                left: -300px;
+                width: 800px;
+                height: 800px;
+                background: radial-gradient(circle,rgba(255,222,88,.035) 0%,transparent 65%);
+                animation: gshift 12s ease-in-out infinite alternate
+            }
+
+            .bg-glow2 {
+                position: absolute;
+                bottom: -300px;
+                right: -300px;
+                width: 700px;
+                height: 700px;
+                background: radial-gradient(circle,rgba(74,158,255,.025) 0%,transparent 65%);
+                animation: gshift 15s ease-in-out infinite alternate-reverse
+            }
+
+            @keyframes gshift {
+                from {
+                    transform: translate(0,0)
+                }
+
+                to {
+                    transform: translate(60px,40px)
+                }
+            }
+
+            /* ─── LAYOUT ─── */
+            #shell {
+                display: flex;
+                height: 100vh;
+                position: relative;
+                z-index: 1
+            }
+
+            /* ─── SIDEBAR ─── */
+            #sidebar {
+                width: var(--sb);
+                flex-shrink: 0;
+                background: rgba(14,14,14,.8);
+                backdrop-filter: var(--blur);
+                -webkit-backdrop-filter: var(--blur);
+                border-right: 1px solid rgba(255,222,88,.08);
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                z-index: 20;
+            }
+
+            #sidebar::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: -1px;
+                width: 1px;
+                height: 100%;
+                background: linear-gradient(180deg,transparent,rgba(255,222,88,.12) 30%,rgba(255,222,88,.12) 70%,transparent)
+            }
+
+            .sb-head {
+                padding: 22px 20px 16px;
+                border-bottom: 1px solid rgba(255,222,88,.07);
+                position: relative
+            }
+
+            .sb-head::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 20px;
+                width: 40px;
+                height: 1px;
+                background: var(--ac)
+            }
+
+            .sb-logo {
+                font-family: var(--f1);
+                font-size: 30px;
+                color: var(--ac);
+                letter-spacing: 3px;
+                line-height: 1;
+                display: flex;
+                align-items: center;
+                gap: 8px
+            }
+
+            .sb-reddot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: var(--red);
+                animation: blink 2.2s infinite
+            }
+
+            @keyframes blink {
+                0%,100% {
+                    opacity: 1;
+                    box-shadow: 0 0 0 0 rgba(255,68,68,0)
+                }
+
+                50% {
+                    opacity: .3
+                }
+
+                70% {
+                    box-shadow: 0 0 0 5px rgba(255,68,68,0)
+                }
+            }
+
+            .sb-sub {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .18em;
+                text-transform: uppercase;
+                color: var(--t4);
+                margin-top: 6px
+            }
+
+            .sb-nav {
+                flex: 1;
+                overflow-y: auto;
+                padding: 8px 0
+            }
+
+            .sb-nav::-webkit-scrollbar {
+                display: none
+            }
+
+            .sb-grp {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .18em;
+                text-transform: uppercase;
+                color: var(--t4);
+                padding: 14px 20px 5px;
+                opacity: .7
+            }
+
+            .nav-item {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                padding: 10px 20px;
+                cursor: none;
+                user-select: none;
+                border-left: 2px solid transparent;
+                transition: all .15s;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .nav-item::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: transparent;
+                transition: background .15s
+            }
+
+            .nav-item:hover {
+                border-left-color: rgba(255,222,88,.25);
+                background: rgba(255,222,88,.03)
+            }
+
+            .nav-item:hover .ni-l,.nav-item:hover .ni-i {
+                color: var(--t1)
+            }
+
+            .nav-item.on {
+                border-left-color: var(--ac);
+                background: rgba(255,222,88,.06)
+            }
+
+            .nav-item.on .ni-l,.nav-item.on .ni-i {
+                color: var(--ac)
+            }
+
+            .ni-i {
+                font-size: 12px;
+                width: 18px;
+                text-align: center;
+                color: var(--t4);
+                flex-shrink: 0;
+                transition: color .15s
+            }
+
+            .ni-l {
+                font-family: var(--f2);
+                font-size: 10px;
+                letter-spacing: .07em;
+                text-transform: uppercase;
+                color: var(--t3);
+                transition: color .15s;
+                white-space: nowrap
+            }
+
+            .ni-badge {
+                font-family: var(--f2);
+                font-size: 8px;
+                padding: 1px 6px;
+                background: var(--acs);
+                color: var(--ac);
+                border: 1px solid rgba(255,222,88,.18);
+                letter-spacing: .06em;
+                margin-left: auto
+            }
+
+            .sb-foot {
+                padding: 14px 20px;
+                border-top: 1px solid rgba(255,222,88,.07)
+            }
+
+            .sb-fn {
+                font-family: var(--f1);
+                font-size: 14px;
+                letter-spacing: 2px;
+                color: var(--t2);
+                margin-bottom: 3px
+            }
+
+            .sb-fs {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .1em;
+                color: var(--t4);
+                line-height: 1.7;
+                text-transform: uppercase
+            }
+
+            /* ─── MAIN ─── */
+            #main {
+                flex: 1;
+                overflow-y: auto;
+                position: relative
+            }
+
+            #main::-webkit-scrollbar {
+                width: 3px
+            }
+
+            #main::-webkit-scrollbar-thumb {
+                background: rgba(255,222,88,.12);
+                border-radius: 1px
+            }
+
+            .page {
+                display: none;
+                padding: 32px 36px 56px;
+                min-height: 100%;
+                animation: pgIn .22s ease
+            }
+
+            .page.on {
+                display: block
+            }
+
+            @keyframes pgIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px)
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0)
+                }
+            }
+
+            /* ─── PAGE HEADER ─── */
+            .pg-hdr {
+                margin-bottom: 28px;
+                padding-bottom: 20px;
+                border-bottom: 1px solid var(--border);
+                position: relative
+            }
+
+            .pg-hdr::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                width: 48px;
+                height: 1px;
+                background: var(--ac)
+            }
+
+            .pg-eye {
+                font-family: var(--f2);
+                font-size: 9px;
+                letter-spacing: .2em;
+                text-transform: uppercase;
+                color: var(--ac);
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                gap: 14px
+            }
+
+            .pg-eye::before {
+                content: '';
+                width: 22px;
+                height: 1px;
+                background: var(--ac)
+            }
+
+            .pg-title {
+                font-family: var(--f1);
+                font-size: 56px;
+                color: var(--t1);
+                line-height: .92;
+                letter-spacing: 1px
+            }
+
+            .pg-title .ac {
+                color: var(--ac)
+            }
+
+            .pg-sub {
+                font-family: var(--f2);
+                font-size: 9px;
+                letter-spacing: .1em;
+                color: var(--t3);
+                margin-top: 10px;
+                line-height: 1.7;
+                text-transform: uppercase
+            }
+
+            /* ─── GLASS PANELS ─── */
+            .gp {
+                background: var(--g2);
+                backdrop-filter: var(--blur2);
+                -webkit-backdrop-filter: var(--blur2);
+                border: 1px solid rgba(255,255,255,.05);
+                border-top: 1px solid rgba(255,255,255,.09);
+                position: relative;
+                overflow: hidden;
+                margin-bottom: 14px
+            }
+
+            .gp::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: linear-gradient(90deg,transparent,rgba(255,222,88,.12),transparent);
+                pointer-events: none
+            }
+
+            .gp-inner {
+                padding: 18px 20px
+            }
+
+            .gp-sm {
+                background: rgba(26,26,26,.75);
+                backdrop-filter: var(--blur3);
+                -webkit-backdrop-filter: var(--blur3);
+                border: 1px solid rgba(255,255,255,.04);
+                padding: 11px 14px
+            }
+
+            .gp-ac {
+                background: rgba(255,222,88,.04);
+                border: 1px solid rgba(255,222,88,.14);
+                border-left: 2px solid var(--ac);
+                padding: 14px 16px;
+                margin-bottom: 14px;
+                position: relative
+            }
+
+            .gp-ac::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg,rgba(255,222,88,.02),transparent);
+                pointer-events: none
+            }
+
+            /* ─── GRIDS ─── */
+            .g2 {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px
+            }
+
+            .g3 {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 10px
+            }
+
+            .g4 {
+                display: grid;
+                grid-template-columns: repeat(4,1fr);
+                gap: 10px
+            }
+
+            @media(max-width: 1100px) {
+                .g4 {
+                    grid-template-columns:1fr 1fr
+                }
+
+                .g3 {
+                    grid-template-columns: 1fr 1fr
+                }
+            }
+
+            /* ─── STAT CELLS ─── */
+            .st {
+                background: rgba(20,20,20,.85);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                border: 1px solid var(--border);
+                padding: 18px 14px;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+                transition: border-color .2s,transform .15s
+            }
+
+            .st:hover {
+                border-color: rgba(255,222,88,.2);
+                transform: translateY(-1px)
+            }
+
+            .st::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: linear-gradient(90deg,transparent,var(--ac),transparent);
+                transform: scaleX(0);
+                transform-origin: left;
+                transition: transform .4s
+            }
+
+            .st:hover::after {
+                transform: scaleX(1)
+            }
+
+            .st-n {
+                font-family: var(--f1);
+                font-size: 36px;
+                color: var(--ac);
+                line-height: 1;
+                margin-bottom: 5px;
+                letter-spacing: 1px
+            }
+
+            .st-l {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .18em;
+                text-transform: uppercase;
+                color: var(--t4)
+            }
+
+            /* ─── PROGRESS ─── */
+            .ptrack {
+                background: rgba(255,255,255,.05);
+                overflow: hidden;
+                position: relative
+            }
+
+            .pfill {
+                transition: width .55s cubic-bezier(.4,0,.2,1)
+            }
+
+            /* ─── SECTION TITLE ─── */
+            .stitle {
+                font-family: var(--f1);
+                font-size: 18px;
+                letter-spacing: 2px;
+                color: var(--t1);
+                margin-bottom: 11px;
+                display: flex;
+                align-items: center;
+                gap: 12px
+            }
+
+            .stitle::before {
+                content: '';
+                width: 18px;
+                height: 1px;
+                background: var(--ac);
+                flex-shrink: 0
+            }
+
+            /* ─── TABS ─── */
+            .tabs {
+                display: flex;
+                border-bottom: 1px solid var(--border);
+                margin-bottom: 22px;
+                overflow-x: auto;
+                background: rgba(14,14,14,.5);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px)
+            }
+
+            .tab {
+                font-family: var(--f2);
+                font-size: 9px;
+                letter-spacing: .12em;
+                text-transform: uppercase;
+                padding: 12px 20px;
+                border: none;
+                background: transparent;
+                color: var(--t4);
+                cursor: none;
+                white-space: nowrap;
+                border-bottom: 2px solid transparent;
+                transition: all .15s;
+                margin-bottom: -1px
+            }
+
+            .tab:hover {
+                color: var(--t2)
+            }
+
+            .tab.on {
+                color: var(--ac);
+                border-bottom-color: var(--ac)
+            }
+
+            /* ─── BUTTONS ─── */
+            .btn {
+                font-family: var(--f2);
+                font-size: 9px;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+                padding: 8px 16px;
+                border: 1px solid var(--border);
+                background: transparent;
+                color: var(--t3);
+                cursor: none;
+                transition: all .15s;
+                white-space: nowrap
+            }
+
+            .btn:hover {
+                border-color: rgba(255,222,88,.25);
+                color: var(--t1)
+            }
+
+            .btn.on,.btn.active {
+                border-color: rgba(255,222,88,.25);
+                color: var(--ac);
+                background: rgba(255,222,88,.04)
+            }
+
+            .btn-ac {
+                background: var(--ac);
+                color: var(--bg);
+                border-color: var(--ac);
+                font-weight: 700;
+                letter-spacing: .12em
+            }
+
+            .btn-ac:hover {
+                background: var(--ach);
+                color: var(--bg)
+            }
+
+            .btn-ok {
+                color: var(--green)!important;
+                border-color: rgba(29,184,122,.4)!important
+            }
+
+            .btn-danger {
+                color: var(--red);
+                border-color: rgba(255,68,68,.25)
+            }
+
+            .btn-danger:hover {
+                background: rgba(255,68,68,.06)
+            }
+
+            .row {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap
+            }
+
+            /* ─── FORMS ─── */
+            .fgrid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-bottom: 14px
+            }
+
+            .field label {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .16em;
+                text-transform: uppercase;
+                color: var(--t4);
+                display: block;
+                margin-bottom: 4px
+            }
+
+            .fi {
+                width: 100%;
+                background: rgba(14,14,14,.85);
+                border: 1px solid var(--border);
+                padding: 9px 11px;
+                font-family: var(--f3);
+                font-size: 12px;
+                color: var(--t1);
+                outline: none;
+                transition: border-color .15s;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px)
+            }
+
+            .fi:focus {
+                border-color: rgba(255,222,88,.35)
+            }
+
+            .fi::placeholder {
+                color: var(--t4)
+            }
+
+            option {
+                background: #1a1a1a;
+                color: var(--t1)
+            }
+
+            /* ─── TOAST ─── */
+            #toast {
+                position: fixed;
+                bottom: 28px;
+                right: 32px;
+                background: rgba(20,20,20,.95);
+                backdrop-filter: var(--blur2);
+                -webkit-backdrop-filter: var(--blur2);
+                border: 1px solid rgba(255,222,88,.18);
+                border-left: 2px solid var(--ac);
+                padding: 11px 18px;
+                font-family: var(--f2);
+                font-size: 10px;
+                letter-spacing: .08em;
+                color: var(--t1);
+                z-index: 9999;
+                opacity: 0;
+                pointer-events: none;
+                transition: all .22s;
+                transform: translateY(14px)
+            }
+
+            #toast.show {
+                opacity: 1;
+                transform: translateY(0)
+            }
+
+            /* ─── TICKER ─── */
+            .ticker {
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+                overflow: hidden;
+                padding: 11px 0;
+                background: rgba(14,14,14,.6);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                margin-bottom: 22px
+            }
+
+            .ticker-t {
+                display: flex;
+                animation: tk 28s linear infinite;
+                white-space: nowrap
+            }
+
+            .ticker-i {
+                font-family: var(--f1);
+                font-size: 12px;
+                letter-spacing: 4px;
+                color: var(--t4);
+                padding: 0 28px;
+                display: inline-flex;
+                align-items: center;
+                gap: 28px
+            }
+
+            .ticker-i::after {
+                content: '·';
+                color: var(--ac);
+                font-size: 20px
+            }
+
+            @keyframes tk {
+                from {
+                    transform: translateX(0)
+                }
+
+                to {
+                    transform: translateX(-50%)
+                }
+            }
+
+            /* ─── EMPTY ─── */
+            .empty {
+                font-family: var(--f2);
+                font-size: 9px;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+                color: var(--t4);
+                text-align: center;
+                padding: 3rem;
+                border: 1px dashed var(--border);
+                line-height: 1.8
+            }
+
+            /* ════ DASHBOARD ════ */
+            .fn-flow {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+                padding: 4px 0
+            }
+
+            .fn {
+                padding: 7px 13px;
+                background: rgba(26,26,26,.7);
+                border: 1px solid var(--border);
+                font-family: var(--f2);
+                font-size: 9px;
+                letter-spacing: .08em;
+                text-transform: uppercase;
+                color: var(--t3);
+                transition: all .15s
+            }
+
+            .fn:hover {
+                border-color: rgba(255,222,88,.2);
+                color: var(--t2)
+            }
+
+            .fn.acd {
+                background: rgba(255,222,88,.07);
+                border-color: rgba(255,222,88,.28);
+                color: var(--ac)
+            }
+
+            .fn-arr {
+                font-family: var(--f1);
+                color: var(--ac);
+                font-size: 16px
+            }
+
+            .dbc {
+                background: rgba(20,20,20,.8);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255,255,255,.04);
+                padding: 18px 20px;
+                position: relative;
+                overflow: hidden;
+                transition: border-color .2s
+            }
+
+            .dbc:hover {
+                border-color: rgba(255,222,88,.1)
+            }
+
+            .dbc::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background: var(--ac);
+                transform: scaleY(0);
+                transform-origin: bottom;
+                transition: transform .4s
+            }
+
+            .dbc:hover::before {
+                transform: scaleY(1)
+            }
+
+            .dbc-lbl {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .18em;
+                text-transform: uppercase;
+                color: var(--ac);
+                margin-bottom: 8px
+            }
+
+            .dbc-name {
+                font-family: var(--f1);
+                font-size: 24px;
+                letter-spacing: 2px;
+                color: var(--t1);
+                margin-bottom: 6px
+            }
+
+            .dbc-role {
+                font-size: 12px;
+                color: var(--t3);
+                line-height: 1.6;
+                margin-bottom: 10px
+            }
+
+            .dbc-item {
+                font-family: var(--f2);
+                font-size: 9px;
+                color: var(--t3);
+                display: flex;
+                gap: 8px;
+                margin-bottom: 4px;
+                line-height: 1.5
+            }
+
+            .dbc-item::before {
+                content: '→';
+                color: var(--ac);
+                flex-shrink: 0
+            }
+
+            /* ════ HOOKS ════ */
+            .hk {
+                background: var(--g2);
+                backdrop-filter: var(--blur2);
+                -webkit-backdrop-filter: var(--blur2);
+                border: 1px solid rgba(255,255,255,.04);
+                border-left: 2px solid;
+                margin-bottom: 10px;
+                transition: all .18s;
+                position: relative;
+                overflow: hidden
+            }
+
+            .hk:hover {
+                transform: translateX(3px);
+                border-right-color: rgba(255,255,255,.08)
+            }
+
+            .hk-inner {
+                padding: 14px 16px
+            }
+
+            .hk-top {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 8px
+            }
+
+            .hk-id {
+                font-family: var(--f1);
+                font-size: 28px;
+                color: rgba(255,255,255,.07);
+                line-height: 1
+            }
+
+            .hk-cat {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .12em;
+                text-transform: uppercase;
+                padding: 2px 8px;
+                border: 1px solid;
+                margin-left: auto
+            }
+
+            .hk-pf {
+                font-family: var(--f2);
+                font-size: 9px;
+                letter-spacing: .07em;
+                color: var(--t4)
+            }
+
+            .hk-name {
+                font-family: var(--f1);
+                font-size: 22px;
+                letter-spacing: 1px;
+                color: var(--t1);
+                margin-bottom: 8px
+            }
+
+            .hk-text {
+                font-size: 13px;
+                line-height: 1.75;
+                color: var(--t2);
+                background: rgba(14,14,14,.7);
+                border-left: 2px solid;
+                padding: 10px 13px;
+                margin-bottom: 7px;
+                font-style: italic
+            }
+
+            .hk-el {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .14em;
+                text-transform: uppercase;
+                color: var(--t4);
+                margin-bottom: 3px
+            }
+
+            .hk-ex {
+                font-size: 11px;
+                color: var(--t3);
+                margin-bottom: 11px;
+                line-height: 1.5
+            }
+
+            .hk-foot {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                flex-wrap: wrap
+            }
+
+            .hk-tags {
+                display: flex;
+                gap: 4px;
+                flex-wrap: wrap
+            }
+
+            .hk-tag {
+                font-family: var(--f2);
+                font-size: 8px;
+                padding: 2px 7px;
+                border: 1px solid var(--border);
+                color: var(--t4);
+                letter-spacing: .06em;
+                transition: all .12s
+            }
+
+            .hk:hover .hk-tag {
+                border-color: rgba(255,255,255,.08)
+            }
+
+            /* ════ REVENUE ════ */
+            .tgt {
+                background: rgba(255,222,88,.04);
+                backdrop-filter: var(--blur2);
+                -webkit-backdrop-filter: var(--blur2);
+                border: 1px solid rgba(255,222,88,.14);
+                border-left: 2px solid var(--ac);
+                padding: 20px 24px;
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 18px;
+                flex-wrap: wrap;
+                position: relative;
+                overflow: hidden
+            }
+
+            .tgt::after {
+                content: '₹';
+                position: absolute;
+                right: -10px;
+                top: -20px;
+                font-family: var(--f1);
+                font-size: 140px;
+                color: rgba(255,222,88,.02);
+                line-height: 1;
+                pointer-events: none
+            }
+
+            .tgt-lbl {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .2em;
+                text-transform: uppercase;
+                color: rgba(255,222,88,.6);
+                margin-bottom: 5px
+            }
+
+            .tgt-num {
+                font-family: var(--f1);
+                font-size: 48px;
+                color: var(--ac);
+                line-height: 1;
+                letter-spacing: 1px
+            }
+
+            .tgt-curr {
+                font-family: var(--f2);
+                font-size: 10px;
+                color: rgba(255,222,88,.5);
+                margin-top: 6px
+            }
+
+            .tgt-pct {
+                font-family: var(--f1);
+                font-size: 24px;
+                color: var(--ac);
+                margin-top: 5px
+            }
+
+            .mrow {
+                background: rgba(20,20,20,.75);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid var(--border);
+                padding: 11px 16px;
+                margin-bottom: 6px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                transition: all .15s
+            }
+
+            .mrow:hover {
+                border-color: rgba(255,222,88,.14);
+                background: rgba(24,24,24,.8)
+            }
+
+            .minfo {
+                flex: 1
+            }
+
+            .mn {
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--t1)
+            }
+
+            .mpl {
+                font-family: var(--f2);
+                font-size: 9px;
+                color: var(--t4);
+                margin-top: 2px
+            }
+
+            .mctrl {
+                display: flex;
+                align-items: center;
+                gap: 9px
+            }
+
+            .mxb {
+                width: 26px;
+                height: 26px;
+                border: 1px solid var(--border);
+                background: transparent;
+                color: var(--t1);
+                font-size: 18px;
+                cursor: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 1;
+                transition: all .12s
+            }
+
+            .mxb:hover {
+                border-color: var(--ac);
+                color: var(--ac);
+                background: rgba(255,222,88,.06)
+            }
+
+            .mxcnt {
+                font-family: var(--f1);
+                font-size: 22px;
+                color: var(--t1);
+                min-width: 22px;
+                text-align: center
+            }
+
+            .mrev {
+                font-family: var(--f2);
+                font-size: 11px;
+                min-width: 66px;
+                text-align: right
+            }
+
+            /* ════ PACKAGES ════ */
+            .pkg {
+                background: var(--g2);
+                backdrop-filter: var(--blur2);
+                -webkit-backdrop-filter: var(--blur2);
+                border: 1px solid rgba(255,255,255,.04);
+                padding: 18px 20px;
+                margin-bottom: 10px;
+                position: relative;
+                overflow: hidden;
+                transition: border-color .2s
+            }
+
+            .pkg::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 3px;
+                height: 0;
+                background: var(--ac);
+                transition: height .4s
+            }
+
+            .pkg:hover::before {
+                height: 100%
+            }
+
+            .pkg.feat {
+                border-color: rgba(255,222,88,.14)
+            }
+
+            .pkg-star {
+                position: absolute;
+                top: 0;
+                right: 20px;
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .12em;
+                text-transform: uppercase;
+                padding: 3px 10px;
+                background: var(--ac);
+                color: var(--bg);
+                font-weight: 700
+            }
+
+            .pkg-name {
+                font-family: var(--f1);
+                font-size: 30px;
+                letter-spacing: 1px;
+                color: var(--t1)
+            }
+
+            .pkg-tag {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .12em;
+                text-transform: uppercase;
+                color: var(--t4);
+                margin-bottom: 10px
+            }
+
+            .pkg-top {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 14px;
+                margin-bottom: 10px
+            }
+
+            .pkg-price {
+                font-family: var(--f1);
+                font-size: 34px;
+                color: var(--ac);
+                text-align: right;
+                line-height: 1;
+                flex-shrink: 0
+            }
+
+            .pkg-cycle {
+                font-family: var(--f2);
+                font-size: 8px;
+                color: var(--t4);
+                text-align: right;
+                margin-top: 4px
+            }
+
+            .pkg-desc {
+                font-size: 12px;
+                color: var(--t3);
+                line-height: 1.65;
+                margin-bottom: 12px;
+                padding-left: 12px;
+                border-left: 1px solid var(--border)
+            }
+
+            .pkg-items {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                margin-bottom: 12px
+            }
+
+            .pkg-item {
+                font-size: 12px;
+                color: var(--t2);
+                display: flex;
+                gap: 9px;
+                align-items: flex-start;
+                line-height: 1.4
+            }
+
+            .pkg-item::before {
+                content: '✓';
+                font-family: var(--f2);
+                font-size: 9px;
+                color: var(--green);
+                flex-shrink: 0;
+                margin-top: 2px
+            }
+
+            .pkg-foot {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 8px;
+                border-top: 1px solid var(--border);
+                padding-top: 10px
+            }
+
+            .up {
+                font-family: var(--f2);
+                font-size: 9px;
+                color: var(--t4);
+                margin-top: 8px;
+                padding-top: 8px;
+                border-top: 1px solid var(--border);
+                line-height: 1.6;
+                font-style: italic
+            }
+
+            /* ════ STREAMS ════ */
+            .stre {
+                background: rgba(20,20,20,.75);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid var(--border);
+                padding: 13px 16px;
+                margin-bottom: 7px;
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 14px;
+                transition: all .15s
+            }
+
+            .stre:hover {
+                border-color: rgba(255,222,88,.1);
+                transform: translateX(2px)
+            }
+
+            .stre-ph {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .14em;
+                text-transform: uppercase;
+                margin-bottom: 4px
+            }
+
+            .stre-nm {
+                font-family: var(--f1);
+                font-size: 20px;
+                letter-spacing: 1px;
+                color: var(--t1);
+                margin-bottom: 3px
+            }
+
+            .stre-d {
+                font-size: 11px;
+                color: var(--t3);
+                line-height: 1.5
+            }
+
+            .stre-amt {
+                font-family: var(--f1);
+                font-size: 24px;
+                text-align: right;
+                line-height: 1
+            }
+
+            .stre-wh {
+                font-family: var(--f2);
+                font-size: 8px;
+                color: var(--t4);
+                margin-top: 3px;
+                text-align: right
+            }
+
+            /* ════ ROADMAP ════ */
+            .phase-blk {
+                margin-bottom: 22px
+            }
+
+            .ph-hdr {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                margin-bottom: 12px;
+                padding-bottom: 9px;
+                border-bottom: 1px solid var(--border);
+                position: relative
+            }
+
+            .ph-hdr::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                width: 32px;
+                height: 1px
+            }
+
+            .ph-dot {
+                width: 10px;
+                height: 10px;
+                flex-shrink: 0;
+                border: 1px solid
+            }
+
+            .ph-title {
+                font-family: var(--f1);
+                font-size: 24px;
+                letter-spacing: 2px;
+                flex: 1
+            }
+
+            .ph-time {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .12em;
+                text-transform: uppercase;
+                color: var(--t4)
+            }
+
+            .task {
+                background: rgba(20,20,20,.7);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                border: 1px solid var(--border);
+                padding: 11px 14px;
+                display: flex;
+                gap: 11px;
+                align-items: flex-start;
+                cursor: none;
+                transition: all .15s;
+                margin-bottom: 5px;
+                position: relative;
+                overflow: hidden
+            }
+
+            .task::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 0;
+                background: rgba(255,222,88,.03);
+                transition: width .3s
+            }
+
+            .task:hover {
+                border-color: rgba(255,222,88,.14)
+            }
+
+            .task:hover::before {
+                width: 100%
+            }
+
+            .task.done {
+                opacity: .42
+            }
+
+            .task.done .task-tt {
+                text-decoration: line-through;
+                color: var(--t4)
+            }
+
+            .tck {
+                width: 16px;
+                height: 16px;
+                border: 1px solid var(--border);
+                flex-shrink: 0;
+                margin-top: 2px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all .15s;
+                position: relative;
+                z-index: 1
+            }
+
+            .task.done .tck {
+                background: var(--ac);
+                border-color: var(--ac)
+            }
+
+            .task.done .tck::after {
+                content: '✓';
+                font-size: 10px;
+                color: var(--bg);
+                font-weight: 700
+            }
+
+            .task-b {
+                flex: 1;
+                position: relative;
+                z-index: 1
+            }
+
+            .task-tt {
+                font-size: 12px;
+                color: var(--t1);
+                line-height: 1.5;
+                margin-bottom: 5px
+            }
+
+            .task-mt {
+                display: flex;
+                gap: 7px;
+                align-items: center;
+                flex-wrap: wrap
+            }
+
+            .tbrand {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+                padding: 1px 7px;
+                border: 1px solid
+            }
+
+            .teff {
+                font-family: var(--f2);
+                font-size: 8px;
+                color: var(--t4)
+            }
+
+            /* ════ CONTENT ════ */
+            .pillar {
+                background: var(--g2);
+                backdrop-filter: var(--blur2);
+                -webkit-backdrop-filter: var(--blur2);
+                border: 1px solid rgba(255,255,255,.04);
+                padding: 16px 18px;
+                margin-bottom: 10px;
+                transition: border-color .2s;
+                position: relative;
+                overflow: hidden
+            }
+
+            .pillar:hover {
+                border-color: rgba(255,255,255,.08)
+            }
+
+            .pillar-top {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                margin-bottom: 10px
+            }
+
+            .pillar-num {
+                font-family: var(--f1);
+                font-size: 50px;
+                line-height: 1;
+                transition: color .25s;
+                color: rgba(255,255,255,.05)
+            }
+
+            .pillar:hover .pillar-num {
+                color: rgba(255,222,88,.12)
+            }
+
+            .pillar-title {
+                font-family: var(--f1);
+                font-size: 24px;
+                letter-spacing: 1px;
+                flex: 1
+            }
+
+            .pillar-freq {
+                font-family: var(--f2);
+                font-size: 9px;
+                letter-spacing: .1em;
+                text-transform: uppercase
+            }
+
+            .pi {
+                font-size: 12px;
+                color: var(--t2);
+                display: flex;
+                gap: 8px;
+                line-height: 1.65;
+                margin-bottom: 3px
+            }
+
+            .pi::before {
+                content: '—';
+                font-family: var(--f2);
+                color: var(--ac);
+                flex-shrink: 0;
+                font-size: 10px;
+                margin-top: 3px
+            }
+
+            .rule {
+                display: flex;
+                align-items: flex-start;
+                gap: 13px;
+                padding: 11px 14px;
+                background: rgba(20,20,20,.65);
+                border: 1px solid var(--border);
+                margin-bottom: 6px;
+                transition: all .15s
+            }
+
+            .rule:hover {
+                border-color: rgba(255,222,88,.1);
+                transform: translateX(2px)
+            }
+
+            .rule-n {
+                font-family: var(--f1);
+                font-size: 24px;
+                line-height: 1;
+                flex-shrink: 0;
+                min-width: 24px;
+                transition: color .2s;
+                color: rgba(255,222,88,.18)
+            }
+
+            .rule:hover .rule-n {
+                color: var(--ac)
+            }
+
+            .rule-t {
+                font-size: 12px;
+                color: var(--t2);
+                line-height: 1.65
+            }
+
+            .rule-t b {
+                font-weight: 500;
+                color: var(--t1)
+            }
+
+            .rhy {
+                display: grid;
+                grid-template-columns: repeat(7,1fr);
+                gap: 7px
+            }
+
+            .rday {
+                background: rgba(20,20,20,.75);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                border: 1px solid var(--border);
+                padding: 12px 8px;
+                text-align: center;
+                transition: all .18s
+            }
+
+            .rday:hover {
+                border-color: rgba(255,222,88,.14);
+                background: rgba(26,26,26,.8)
+            }
+
+            .rday-n {
+                font-family: var(--f1);
+                font-size: 18px;
+                letter-spacing: 2px;
+                color: var(--ac);
+                margin-bottom: 6px
+            }
+
+            .rday-t {
+                font-family: var(--f2);
+                font-size: 8px;
+                color: var(--t3);
+                line-height: 1.6
+            }
+
+            /* ════ CLIENTS ════ */
+            .clc {
+                background: rgba(20,20,20,.75);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid var(--border);
+                padding: 15px 18px;
+                margin-bottom: 8px;
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                transition: all .18s;
+                position: relative;
+                overflow: hidden
+            }
+
+            .clc::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 0;
+                background: rgba(255,222,88,.025);
+                transition: width .3s
+            }
+
+            .clc:hover {
+                border-color: rgba(255,222,88,.14)
+            }
+
+            .clc:hover::before {
+                width: 100%
+            }
+
+            .cl-av {
+                width: 42px;
+                height: 42px;
+                background: var(--acs);
+                border: 1px solid rgba(255,222,88,.2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: var(--f1);
+                font-size: 18px;
+                letter-spacing: 1px;
+                color: var(--ac);
+                flex-shrink: 0;
+                position: relative;
+                z-index: 1
+            }
+
+            .cl-b {
+                flex: 1;
+                position: relative;
+                z-index: 1
+            }
+
+            .cl-nm {
+                font-family: var(--f1);
+                font-size: 24px;
+                letter-spacing: 1px;
+                color: var(--t1);
+                margin-bottom: 2px
+            }
+
+            .cl-bz {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .12em;
+                text-transform: uppercase;
+                color: var(--t3);
+                margin-bottom: 8px
+            }
+
+            .cl-nt {
+                font-size: 11px;
+                color: var(--t4);
+                font-style: italic;
+                margin-bottom: 8px;
+                line-height: 1.5
+            }
+
+            .cl-ft {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap
+            }
+
+            .cl-pr {
+                font-family: var(--f1);
+                font-size: 24px;
+                color: var(--ac);
+                letter-spacing: 1px
+            }
+
+            .cl-bdg {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+                padding: 2px 8px;
+                border: 1px solid
+            }
+
+            .cl-del {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+                padding: 2px 8px;
+                border: 1px solid var(--border);
+                background: transparent;
+                color: var(--t4);
+                cursor: none;
+                margin-left: auto;
+                transition: all .15s
+            }
+
+            .cl-del:hover {
+                color: var(--red);
+                border-color: rgba(255,68,68,.3)
+            }
+
+            .mrr-box {
+                background: rgba(255,222,88,.04);
+                border: 1px solid rgba(255,222,88,.14);
+                border-left: 2px solid var(--ac);
+                padding: 16px 20px;
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 14px;
+                flex-wrap: wrap;
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px)
+            }
+
+            .mrr-v {
+                font-family: var(--f1);
+                font-size: 34px;
+                color: var(--ac);
+                letter-spacing: 1px;
+                line-height: 1
+            }
+
+            .mrr-l {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .16em;
+                text-transform: uppercase;
+                color: rgba(255,222,88,.55);
+                margin-bottom: 4px
+            }
+
+            /* ════ NOTES ════ */
+            .nta {
+                width: 100%;
+                min-height: 340px;
+                background: rgba(14,14,14,.85);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                border: 1px solid var(--border);
+                padding: 18px;
+                font-size: 13px;
+                line-height: 1.85;
+                color: var(--t1);
+                font-family: var(--f3);
+                resize: vertical;
+                outline: none;
+                transition: border-color .15s
+            }
+
+            .nta:focus {
+                border-color: rgba(255,222,88,.28)
+            }
+
+            .nta::placeholder {
+                color: var(--t4)
+            }
+
+            .nt-st {
+                font-family: var(--f2);
+                font-size: 9px;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+                color: var(--t4);
+                margin-top: 8px;
+                transition: color .3s
+            }
+
+            .nt-st.saved {
+                color: var(--green)
+            }
+
+            /* ════ CHANGELOG ════ */
+            .cl-entry {
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                padding: 12px 0;
+                border-bottom: 1px solid var(--border)
+            }
+
+            .cl-entry:last-child {
+                border-bottom: none
+            }
+
+            .cl-ver {
+                font-family: var(--f1);
+                font-size: 18px;
+                letter-spacing: 1px;
+                color: var(--ac);
+                flex-shrink: 0;
+                min-width: 52px
+            }
+
+            .cl-meta {
+                flex: 1
+            }
+
+            .cl-date {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .14em;
+                text-transform: uppercase;
+                color: var(--t4);
+                margin-bottom: 5px
+            }
+
+            .cl-desc {
+                font-size: 12px;
+                color: var(--t2);
+                line-height: 1.65
+            }
+
+            .cl-new {
+                font-family: var(--f2);
+                font-size: 8px;
+                padding: 1px 7px;
+                border: 1px solid rgba(29,184,122,.3);
+                color: var(--green);
+                background: rgba(29,184,122,.05);
+                margin-left: 8px;
+                letter-spacing: .08em
+            }
+
+            /* ════ TIMELINE ════ */
+            .tl-item {
+                display: grid;
+                grid-template-columns: 92px 1fr;
+                gap: 16px;
+                padding-bottom: 22px
+            }
+
+            .tl-l {
+                text-align: right;
+                padding-top: 3px
+            }
+
+            .tl-mo {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .14em;
+                text-transform: uppercase;
+                color: var(--t4);
+                margin-bottom: 4px
+            }
+
+            .tl-tg {
+                font-family: var(--f1);
+                font-size: 22px;
+                letter-spacing: 1px;
+                line-height: 1
+            }
+
+            .tl-r {
+                border-left: 1px solid var(--border);
+                padding-left: 18px;
+                position: relative
+            }
+
+            .tl-r::before {
+                content: '';
+                position: absolute;
+                left: -4px;
+                top: 7px;
+                width: 7px;
+                height: 7px;
+                background: var(--border);
+                transition: background .2s,box-shadow .2s
+            }
+
+            .tl-item:hover .tl-r::before {
+                background: var(--ac);
+                box-shadow: 0 0 8px rgba(255,222,88,.4)
+            }
+
+            .tl-tt {
+                font-family: var(--f1);
+                font-size: 18px;
+                letter-spacing: 1px;
+                color: var(--t1);
+                margin-bottom: 7px
+            }
+
+            .tl-s {
+                font-size: 11px;
+                color: var(--t3);
+                line-height: 1.65;
+                margin-bottom: 3px
+            }
+
+            /* ════ PLAYBOOK ════ */
+            .pb-phase-nav {
+                display: flex;
+                gap: 6px;
+                margin-bottom: 18px;
+                flex-wrap: wrap;
+                padding-bottom: 14px;
+                border-bottom: 1px solid var(--border);
+                position: relative
+            }
+
+            .pb-phase-nav::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                width: 40px;
+                height: 1px;
+                background: var(--ac)
+            }
+
+            .pbp {
+                font-family: var(--f2);
+                font-size: 9px;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+                padding: 7px 14px;
+                border: 1px solid var(--border);
+                background: transparent;
+                color: var(--t4);
+                cursor: none;
+                transition: all .15s;
+                white-space: nowrap
+            }
+
+            .pbp:hover {
+                border-color: rgba(255,222,88,.25);
+                color: var(--t2)
+            }
+
+            .pbp.on {
+                background: rgba(255,222,88,.07);
+                border-color: rgba(255,222,88,.3);
+                color: var(--ac)
+            }
+
+            .pb-phase {
+                display: none
+            }
+
+            .pb-phase.on {
+                display: block
+            }
+
+            .pb-week-nav {
+                display: flex;
+                gap: 5px;
+                margin-bottom: 14px;
+                flex-wrap: wrap
+            }
+
+            .pbw {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+                padding: 5px 12px;
+                border: 1px solid var(--border);
+                background: transparent;
+                color: var(--t4);
+                cursor: none;
+                transition: all .15s
+            }
+
+            .pbw:hover {
+                color: var(--t2);
+                border-color: rgba(255,255,255,.1)
+            }
+
+            .pbw.on {
+                color: var(--t1);
+                border-color: rgba(255,255,255,.15);
+                background: rgba(255,255,255,.04)
+            }
+
+            .pb-week {
+                display: none
+            }
+
+            .pb-week.on {
+                display: block
+            }
+
+            .pb-hdr {
+                margin-bottom: 14px
+            }
+
+            .pb-title {
+                font-family: var(--f1);
+                font-size: 26px;
+                letter-spacing: 1px;
+                color: var(--t1);
+                margin-bottom: 5px
+            }
+
+            .pb-sub {
+                font-size: 12px;
+                color: var(--t3);
+                line-height: 1.65
+            }
+
+            .pb-truth {
+                background: rgba(255,222,88,.04);
+                border: 1px solid rgba(255,222,88,.12);
+                border-left: 2px solid var(--ac);
+                padding: 12px 15px;
+                margin-bottom: 12px;
+                position: relative
+            }
+
+            .pb-truth-lbl {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .16em;
+                text-transform: uppercase;
+                color: var(--ac);
+                margin-bottom: 6px;
+                opacity: .8
+            }
+
+            .pb-truth-t {
+                font-size: 12px;
+                color: var(--t2);
+                line-height: 1.7
+            }
+
+            .pb-warn {
+                background: rgba(255,68,68,.04);
+                border: 1px solid rgba(255,68,68,.15);
+                border-left: 2px solid var(--red);
+                padding: 12px 15px;
+                margin-bottom: 12px
+            }
+
+            .pb-warn-lbl {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .16em;
+                text-transform: uppercase;
+                color: var(--red);
+                margin-bottom: 6px;
+                opacity: .8
+            }
+
+            .pb-warn-t {
+                font-size: 12px;
+                color: rgba(255,180,180,.8);
+                line-height: 1.7
+            }
+
+            .pb-win {
+                background: rgba(29,184,122,.04);
+                border: 1px solid rgba(29,184,122,.15);
+                border-left: 2px solid var(--green);
+                padding: 12px 15px;
+                margin-bottom: 12px
+            }
+
+            .pb-win-lbl {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .16em;
+                text-transform: uppercase;
+                color: var(--green);
+                margin-bottom: 6px;
+                opacity: .8
+            }
+
+            .pb-win-t {
+                font-size: 12px;
+                color: rgba(150,255,200,.8);
+                line-height: 1.7
+            }
+
+            .pb-target {
+                background: rgba(22,22,22,.7);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid var(--border);
+                padding: 12px 16px;
+                margin-bottom: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 14px;
+                flex-wrap: wrap
+            }
+
+            .pb-t-lbl {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .14em;
+                text-transform: uppercase;
+                color: var(--t4);
+                margin-bottom: 4px
+            }
+
+            .pb-t-val {
+                font-family: var(--f1);
+                font-size: 24px;
+                letter-spacing: 1px;
+                color: var(--ac)
+            }
+
+            .pb-t-sub {
+                font-size: 11px;
+                color: var(--t3);
+                margin-top: 2px
+            }
+
+            .pb-acts-title {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .16em;
+                text-transform: uppercase;
+                color: var(--ac);
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                gap: 10px
+            }
+
+            .pb-acts-title::before {
+                content: '';
+                width: 16px;
+                height: 1px;
+                background: var(--ac);
+                flex-shrink: 0
+            }
+
+            .pb-act {
+                background: rgba(20,20,20,.75);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                border: 1px solid var(--border);
+                padding: 11px 14px;
+                display: flex;
+                gap: 10px;
+                align-items: flex-start;
+                cursor: none;
+                transition: all .15s;
+                margin-bottom: 5px;
+                position: relative;
+                overflow: hidden
+            }
+
+            .pb-act::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 0;
+                background: rgba(255,222,88,.025);
+                transition: width .3s
+            }
+
+            .pb-act:hover {
+                border-color: rgba(255,222,88,.14)
+            }
+
+            .pb-act:hover::before {
+                width: 100%
+            }
+
+            .pb-act.done {
+                opacity: .4
+            }
+
+            .pb-act.done .pb-at {
+                text-decoration: line-through;
+                color: var(--t4)
+            }
+
+            .pb-ck {
+                width: 16px;
+                height: 16px;
+                border: 1px solid var(--border);
+                flex-shrink: 0;
+                margin-top: 2px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all .15s;
+                position: relative;
+                z-index: 1
+            }
+
+            .pb-act.done .pb-ck {
+                background: var(--ac);
+                border-color: var(--ac)
+            }
+
+            .pb-act.done .pb-ck::after {
+                content: '✓';
+                font-size: 10px;
+                color: var(--bg);
+                font-weight: 700
+            }
+
+            .pb-ab {
+                flex: 1;
+                position: relative;
+                z-index: 1
+            }
+
+            .pb-at {
+                font-size: 12px;
+                color: var(--t1);
+                line-height: 1.5;
+                margin-bottom: 5px
+            }
+
+            .pb-at b {
+                font-weight: 500;
+                color: var(--t1)
+            }
+
+            .pb-tags {
+                display: flex;
+                gap: 5px;
+                flex-wrap: wrap
+            }
+
+            .pb-tag {
+                font-family: var(--f2);
+                font-size: 8px;
+                padding: 1px 7px;
+                border: 1px solid var(--border);
+                color: var(--t4);
+                letter-spacing: .06em
+            }
+
+            .pb-tag.money {
+                border-color: rgba(29,184,122,.3);
+                color: var(--green);
+                background: rgba(29,184,122,.05)
+            }
+
+            .pb-tag.urgent {
+                border-color: rgba(255,68,68,.3);
+                color: var(--red);
+                background: rgba(255,68,68,.05)
+            }
+
+            .pb-tag.content {
+                border-color: rgba(74,158,255,.3);
+                color: var(--blue);
+                background: rgba(74,158,255,.05)
+            }
+
+            .pb-tag.warn {
+                border-color: rgba(255,222,88,.3);
+                color: var(--ac);
+                background: rgba(255,222,88,.05)
+            }
+
+            .pb-script {
+                background: rgba(14,14,14,.8);
+                border: 1px solid var(--border);
+                border-left: 1px solid rgba(255,222,88,.2);
+                padding: 13px 15px;
+                margin: 10px 0;
+                font-size: 12px;
+                color: var(--t2);
+                line-height: 1.75;
+                font-style: italic
+            }
+
+            .pb-script-lbl {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .14em;
+                text-transform: uppercase;
+                color: var(--t4);
+                margin-bottom: 6px;
+                font-style: normal
+            }
+
+            .pb-div {
+                border: none;
+                border-top: 1px solid var(--border);
+                margin: 16px 0
+            }
+
+            .pb-prog-bar {
+                background: rgba(255,255,255,.05);
+                height: 3px;
+                overflow: hidden;
+                margin-bottom: 18px
+            }
+
+            .pb-prog-fill {
+                height: 3px;
+                background: var(--ac);
+                transition: width .4s
+            }
+
+            .pb-prog-lbl {
+                font-family: var(--f2);
+                font-size: 8px;
+                letter-spacing: .12em;
+                text-transform: uppercase;
+                color: var(--t4);
+                margin-bottom: 8px
+            }
+        </style>
+    </head>
+    <body>
+        <div class="cur" id="cur"></div>
+        <div class="cur-r" id="cur-r"></div>
+        <div id="bg-shell">
+            <div class="bg-grid"></div>
+            <div class="bg-noise"></div>
+            <div class="bg-glow1"></div>
+            <div class="bg-glow2"></div>
+        </div>
+        <div id="shell">
+            <!-- SIDEBAR -->
+            <div id="sidebar">
+                <div class="sb-head">
+                    <div class="sb-logo">
+                        SVTCH<span class="sb-reddot"></span>
+                    </div>
+                    <div class="sb-sub">Command Center · 2171.Co</div>
+                </div>
+                <nav class="sb-nav">
+                    <div class="sb-grp">Overview</div>
+                    <div class="nav-item on" data-page="dash">
+                        <span class="ni-i">◈</span>
+                        <span class="ni-l">Dashboard</span>
+                    </div>
+                    <div class="sb-grp">Growth Tools</div>
+                    <div class="nav-item" data-page="hooks">
+                        <span class="ni-i">⚡</span>
+                        <span class="ni-l">Hook Vault</span>
+                        <span class="ni-badge">30</span>
+                    </div>
+                    <div class="nav-item" data-page="rev">
+                        <span class="ni-i">₹</span>
+                        <span class="ni-l">Revenue</span>
+                    </div>
+                    <div class="nav-item" data-page="road">
+                        <span class="ni-i">◎</span>
+                        <span class="ni-l">Roadmap</span>
+                    </div>
+                    <div class="nav-item" data-page="content">
+                        <span class="ni-i">▦</span>
+                        <span class="ni-l">Content OS</span>
+                    </div>
+                    <div class="nav-item" data-page="playbook">
+                        <span class="ni-i">▶</span>
+                        <span class="ni-l">Playbook</span>
+                        <span class="ni-badge">NEW</span>
+                    </div>
+                    <div class="sb-grp">Records</div>
+                    <div class="nav-item" data-page="clients">
+                        <span class="ni-i">◉</span>
+                        <span class="ni-l">Clients</span>
+                    </div>
+                    <div class="nav-item" data-page="notes">
+                        <span class="ni-i">✎</span>
+                        <span class="ni-l">Notes</span>
+                    </div>
+                    <div class="sb-grp">System</div>
+                    <div class="nav-item" data-page="changelog">
+                        <span class="ni-i">↑</span>
+                        <span class="ni-l">Changelog</span>
+                    </div>
+                </nav>
+                <div class="sb-foot">
+                    <div class="sb-fn">Vijaykumar M Pillai</div>
+                    <div class="sb-fs">
+                        2171 Visual Universe<br/>
+                        SVTCH Creatives · 2026<br/>Data → localStorage
+                    </div>
+                    <div style="margin-top:8px;font-family:var(--f2);font-size:8px;color:rgba(255,222,88,.35);letter-spacing:.1em;text-transform:uppercase;border-top:1px solid rgba(255,222,88,.07);padding-top:8px">Build v1.3 · 2026-03-15</div>
+                </div>
+            </div>
+            <!-- MAIN -->
+            <main id="main">
+                <!-- DASHBOARD -->
+                <div class="page on" id="page-dash">
+                    <div class="pg-hdr">
+                        <div class="pg-eye">2171 Visual Universe × SVTCH Creatives · 2026</div>
+                        <div class="pg-title">
+                            WELCOME<br/>
+                            <span class="ac">BACK, VK.</span>
+                        </div>
+                        <div class="pg-sub">Your complete brand growth system · Everything tracked · Everything actionable</div>
+                    </div>
+                    <div class="ticker">
+                        <div class="ticker-t">
+                            <span class="ticker-i">Dashboard</span>
+                            <span class="ticker-i">Hook Vault</span>
+                            <span class="ticker-i">Revenue System</span>
+                            <span class="ticker-i">90-Day Roadmap</span>
+                            <span class="ticker-i">Content OS</span>
+                            <span class="ticker-i">Client Tracker</span>
+                            <span class="ticker-i">Notes</span>
+                            <span class="ticker-i">Dashboard</span>
+                            <span class="ticker-i">Hook Vault</span>
+                            <span class="ticker-i">Revenue System</span>
+                            <span class="ticker-i">90-Day Roadmap</span>
+                            <span class="ticker-i">Content OS</span>
+                            <span class="ticker-i">Client Tracker</span>
+                            <span class="ticker-i">Notes</span>
+                        </div>
+                    </div>
+                    <div class="g4" style="margin-bottom:16px">
+                        <div class="st">
+                            <div class="st-n" id="d-rev">₹0</div>
+                            <div class="st-l">Monthly Revenue</div>
+                        </div>
+                        <div class="st">
+                            <div class="st-n" id="d-clients" style="color:var(--blue)">0</div>
+                            <div class="st-l">Active Clients</div>
+                        </div>
+                        <div class="st">
+                            <div class="st-n" id="d-tasks" style="color:var(--green)">0%</div>
+                            <div class="st-l">Roadmap Done</div>
+                        </div>
+                        <div class="st">
+                            <div class="st-n" id="d-gap" style="color:var(--red)">₹80k</div>
+                            <div class="st-l">Gap to Target</div>
+                        </div>
+                    </div>
+                    <div class="g2" style="margin-bottom:14px">
+                        <div class="gp">
+                            <div class="gp-inner">
+                                <div class="stitle" style="margin-bottom:13px">Revenue vs ₹80k Target</div>
+                                <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                                    <span style="font-family:var(--f2);font-size:9px;color:var(--t4)">₹0</span>
+                                    <span id="d-rev-pct" style="font-family:var(--f2);font-size:9px;color:var(--ac)">0% of ₹80k</span>
+                                    <span style="font-family:var(--f2);font-size:9px;color:var(--t4)">₹80k</span>
+                                </div>
+                                <div class="ptrack" style="height:5px">
+                                    <div class="pfill" id="d-rev-bar" style="background:var(--ac);width:0%;height:5px"></div>
+                                </div>
+                                <div style="margin-top:14px;font-family:var(--f2);font-size:9px;color:var(--t3);line-height:1.75;text-transform:uppercase;letter-spacing:.06em">Path: 3 × Growth Retainer (₹25k) = ₹75k baseline. Add content income to clear ₹80k.</div>
+                            </div>
+                        </div>
+                        <div class="gp">
+                            <div class="gp-inner">
+                                <div class="stitle" style="margin-bottom:13px">Roadmap Progress</div>
+                                <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                                    <span id="d-task-done" style="font-family:var(--f2);font-size:9px;color:var(--green)">0 tasks done</span>
+                                    <span id="d-task-total" style="font-family:var(--f2);font-size:9px;color:var(--t4)">of 19</span>
+                                </div>
+                                <div class="ptrack" style="height:5px">
+                                    <div class="pfill" id="d-task-bar" style="background:var(--green);width:0%;height:5px"></div>
+                                </div>
+                                <div style="margin-top:14px;font-family:var(--f2);font-size:9px;color:var(--t3);line-height:1.75;text-transform:uppercase;letter-spacing:.06em">
+                                    Tick tasks in <span style="color:var(--ac);cursor:none;text-decoration:underline" onclick="nav('road')">Roadmap →</span>
+                                    to track 90-day execution.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="g2" style="margin-bottom:14px">
+                        <div class="dbc">
+                            <div class="dbc-lbl">The Engine</div>
+                            <div class="dbc-name">2171 VISUAL UNIVERSE</div>
+                            <div class="dbc-role">Your personal brand. Builds authority, attracts audience, creates trust at scale through content.</div>
+                            <div class="dbc-item">Content that educates & attracts ideal clients</div>
+                            <div class="dbc-item">Positions you as expert, not just a vendor</div>
+                            <div class="dbc-item">Builds organic reach on Instagram & YouTube</div>
+                            <div class="dbc-item">Warms audiences before they discover SVTCH</div>
+                        </div>
+                        <div class="dbc" style="border-color:rgba(74,158,255,.06)">
+                            <div class="dbc-lbl" style="color:var(--blue)">The Destination</div>
+                            <div class="dbc-name">SVTCH CREATIVES</div>
+                            <div class="dbc-role">Your agency. Converts warmed-up leads into paying clients through clear positioning and offers.</div>
+                            <div class="dbc-item" style="--ac:var(--blue)">Presents service packages to prospects</div>
+                            <div class="dbc-item" style="--ac:var(--blue)">Converts DMs and inbound into client calls</div>
+                            <div class="dbc-item" style="--ac:var(--blue)">Delivers structured creative systems</div>
+                            <div class="dbc-item" style="--ac:var(--blue)">Builds case studies from every project</div>
+                        </div>
+                    </div>
+                    <div class="gp">
+                        <div class="gp-inner">
+                            <div class="stitle" style="margin-bottom:14px">The Funnel — 2171 VU → SVTCH</div>
+                            <div class="fn-flow">
+                                <div class="fn">Post on 2171 VU</div>
+                                <div class="fn-arr">→</div>
+                                <div class="fn">Audience discovers</div>
+                                <div class="fn-arr">→</div>
+                                <div class="fn">Checks profile</div>
+                                <div class="fn-arr">→</div>
+                                <div class="fn">Finds SVTCH</div>
+                                <div class="fn-arr">→</div>
+                                <div class="fn">Reads pitch deck</div>
+                                <div class="fn-arr">→</div>
+                                <div class="fn acd">DM → Paid Client ₹₹₹</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gp-ac" style="font-family:var(--f2);font-size:9px;line-height:1.85;color:var(--t2);text-transform:uppercase;letter-spacing:.07em">
+                        <span style="color:var(--ac);font-weight:700">Core Truth ·</span>
+                        2171 VU is the engine. SVTCH is the destination. Every piece of content is a client acquisition asset. Your first client doesn't come from going viral — it comes from one conversation with one person who already trusts you.
+      
+                    </div>
+                </div>
+                <!-- HOOK VAULT -->
+                <div class="page" id="page-hooks">
+                    <div class="pg-hdr">
+                        <div class="pg-eye">Scroll-Stop System · Tech & Graphics Design</div>
+                        <div class="pg-title">
+                            HOOK<br/>
+                            <span class="ac">VAULT.</span>
+                        </div>
+                        <div class="pg-sub">30 platform-specific hooks · 10 templates · Personal brand & portfolio angle</div>
+                    </div>
+                    <div class="row" style="margin-bottom:10px" id="hk-cats"></div>
+                    <div class="row" style="margin-bottom:16px" id="hk-pfs"></div>
+                    <div id="hk-cnt" style="font-family:var(--f2);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--t4);margin-bottom:14px"></div>
+                    <div id="hk-list"></div>
+                </div>
+                <!-- REVENUE -->
+                <div class="page" id="page-rev">
+                    <div class="pg-hdr">
+                        <div class="pg-eye">Monetization Engine · SVTCH Creatives</div>
+                        <div class="pg-title">
+                            REVENUE<br/>
+                            <span class="ac">SYSTEM.</span>
+                        </div>
+                        <div class="pg-sub">Interactive mixer · Service packages · Revenue streams · Month timeline</div>
+                    </div>
+                    <div class="tabs" id="rev-tabs">
+                        <button class="tab on" data-rt="mixer">Revenue Mixer</button>
+                        <button class="tab" data-rt="pkgs">Packages</button>
+                        <button class="tab" data-rt="streams">Streams</button>
+                        <button class="tab" data-rt="timeline">Timeline</button>
+                    </div>
+                    <div id="rv-mixer"></div>
+                    <div id="rv-pkgs" style="display:none"></div>
+                    <div id="rv-streams" style="display:none"></div>
+                    <div id="rv-timeline" style="display:none"></div>
+                </div>
+                <!-- ROADMAP -->
+                <div class="page" id="page-road">
+                    <div class="pg-hdr">
+                        <div class="pg-eye">90-Day Execution Plan · Brand Growth System</div>
+                        <div class="pg-title">
+                            ROAD<span class="ac">MAP.</span>
+                        </div>
+                        <div class="pg-sub">Click any task to mark complete · Progress auto-saves to browser</div>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px">
+                        <span id="road-lbl" style="font-family:var(--f2);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--t4)">0 of 19 tasks done</span>
+                        <button class="btn btn-danger" onclick="resetTasks()">Reset All Tasks</button>
+                    </div>
+                    <div class="ptrack" style="height:4px;margin-bottom:26px">
+                        <div class="pfill" id="road-bar" style="background:var(--ac);width:0%;height:4px"></div>
+                    </div>
+                    <div id="road-phases"></div>
+                </div>
+                <!-- CONTENT OS -->
+                <div class="page" id="page-content">
+                    <div class="pg-hdr">
+                        <div class="pg-eye">Content Operating System · 2171 Visual Universe</div>
+                        <div class="pg-title">
+                            CONTENT<br/>
+                            <span class="ac">SYSTEM.</span>
+                        </div>
+                        <div class="pg-sub">3 pillars · 5 non-negotiable rules · 7-day weekly rhythm</div>
+                    </div>
+                    <div class="gp-ac" style="font-family:var(--f2);font-size:9px;line-height:1.85;color:var(--t2);text-transform:uppercase;letter-spacing:.07em">
+                        <span style="color:var(--ac);font-weight:700">Cardinal Rule ·</span>
+                        You're not a content creator. You're a designer who creates content to attract clients. Every post must educate, show process, or position your taste. If it doesn't do one of those three — don't post it.
+      
+                    </div>
+                    <div class="stitle" style="margin-bottom:12px">Content Pillars</div>
+                    <div id="pillars-out" style="margin-bottom:22px"></div>
+                    <div class="stitle" style="margin-bottom:12px">Non-Negotiable Rules</div>
+                    <div id="rules-out" style="margin-bottom:22px"></div>
+                    <div class="stitle" style="margin-bottom:12px">Weekly Posting Rhythm</div>
+                    <div id="rhythm-out" style="margin-bottom:22px"></div>
+                    <div class="stitle" style="margin-bottom:10px">Repurpose Formula</div>
+                    <div class="gp-sm" style="font-family:var(--f2);font-size:9px;color:var(--t2);line-height:1.85;text-transform:uppercase;letter-spacing:.07em">
+                        Create <span style="color:var(--ac)">1 piece of content</span>
+                        → post it on 3 platforms:<br/>
+                        Reel → YouTube Short (same video) &nbsp;· &nbsp;Carousel → LinkedIn &nbsp;· &nbsp;Strong insight → Story series next day.<br/>
+                        <br/>
+                        Never create 3 pieces. <span style="color:var(--ac)">Create 1 piece, 3 times.</span>
+                    </div>
+                </div>
+                <!-- CLIENTS -->
+                <div class="page" id="page-clients">
+                    <div class="pg-hdr">
+                        <div class="pg-eye">Client Records · SVTCH Creatives</div>
+                        <div class="pg-title">
+                            CLIENT<br/>
+                            <span class="ac">TRACKER.</span>
+                        </div>
+                        <div class="pg-sub">Add clients · Track status · MRR calculated automatically</div>
+                    </div>
+                    <div class="gp" style="margin-bottom:14px">
+                        <div class="gp-inner">
+                            <div class="stitle" style="margin-bottom:13px">Add New Client</div>
+                            <div class="fgrid">
+                                <div class="field">
+                                    <label>Client / Brand name</label>
+                                    <input class="fi" id="cl-n" placeholder="e.g. Trion Dental"/>
+                                </div>
+                                <div class="field">
+                                    <label>Business type</label>
+                                    <input class="fi" id="cl-b" placeholder="e.g. Dental Clinic, Jewellery"/>
+                                </div>
+                                <div class="field">
+                                    <label>Service tier</label>
+                                    <select class="fi" id="cl-t">
+                                        <option value="starter">Starter Brand — ₹12,000 one-time</option>
+                                        <option value="growth" selected>Growth Retainer — ₹25,000/month</option>
+                                        <option value="premium">Premium Partner — ₹45,000/month</option>
+                                        <option value="custom">Custom price</option>
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <label>Custom price ₹ (optional)</label>
+                                    <input class="fi" id="cl-p" placeholder="Overrides tier price"/>
+                                </div>
+                                <div class="field">
+                                    <label>Status</label>
+                                    <select class="fi" id="cl-s">
+                                        <option value="lead">Lead</option>
+                                        <option value="onboarding">Onboarding</option>
+                                        <option value="active" selected>Active</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <label>Notes (optional)</label>
+                                    <input class="fi" id="cl-nt" placeholder="Brief notes about this client"/>
+                                </div>
+                            </div>
+                            <button class="btn btn-ac" onclick="addClient()">+ Add Client</button>
+                        </div>
+                    </div>
+                    <div id="cl-mrr" style="display:none" class="mrr-box">
+                        <div>
+                            <div class="mrr-l">Monthly Recurring Revenue</div>
+                            <div class="mrr-v" id="cl-mrr-v">₹0</div>
+                        </div>
+                        <div style="text-align:center">
+                            <div class="mrr-l">Active Clients</div>
+                            <div class="mrr-v" id="cl-act" style="color:var(--blue)">0</div>
+                        </div>
+                        <div style="text-align:right">
+                            <div class="mrr-l">Gap to ₹80k</div>
+                            <div class="mrr-v" id="cl-gap" style="color:var(--red)">₹80k</div>
+                        </div>
+                    </div>
+                    <div id="cl-list"></div>
+                </div>
+                <!-- NOTES -->
+                <div class="page" id="page-notes">
+                    <div class="pg-hdr">
+                        <div class="pg-eye">Private Scratch Pad · Auto-saves to browser</div>
+                        <div class="pg-title">
+                            NOTES<span class="ac">.</span>
+                        </div>
+                        <div class="pg-sub">Ideas, briefs, strategy, to-dos — type freely, saves automatically every 2 seconds</div>
+                    </div>
+                    <textarea class="nta" id="nta" placeholder="Start typing...&#10;&#10;Use this for:&#10;— Content ideas and hook variations to try&#10;— Client brief notes before calls&#10;— Strategy thoughts and daily priorities&#10;— Outreach message drafts&#10;— Anything that needs to be captured fast"></textarea>
+                    <div class="nt-st" id="nt-st">Auto-saves every 2 seconds</div>
+                    <div class="row" style="margin-top:14px">
+                        <button class="btn btn-danger" onclick="clearNotes()">Clear Notes</button>
+                        <span style="font-family:var(--f2);font-size:9px;letter-spacing:.08em;color:var(--t4);text-transform:uppercase">Stored in browser localStorage</span>
+                    </div>
+                </div>
+                <!-- PLAYBOOK -->
+                <div class="page" id="page-playbook">
+                    <div class="pg-hdr">
+                        <div class="pg-eye">Step-by-Step Execution Guide · No Fluff</div>
+                        <div class="pg-title">
+                            THE<br/>
+                            <span class="ac">PLAYBOOK.</span>
+                        </div>
+                        <div class="pg-sub">Your fastest path to ₹80k · Phase by phase · Week by week · Action by action</div>
+                    </div>
+                    <div class="gp-ac" style="font-family:var(--f2);font-size:9px;line-height:1.85;color:var(--t2);text-transform:uppercase;letter-spacing:.07em">
+                        <span style="color:var(--ac);font-weight:700">The single truth ·</span>
+                        Your fastest path to money is not a Reel. It is a WhatsApp message to someone who already knows your work. Content compounds over months. One conversation can close in days. Start with outreach — always.
+      
+                    </div>
+                    <div class="pb-prog-lbl" id="pb-prog-lbl">Playbook progress: 0 of 30 actions done</div>
+                    <div class="pb-prog-bar">
+                        <div class="pb-prog-fill" id="pb-prog-fill" style="width:0%"></div>
+                    </div>
+                    <div class="pb-phase-nav" id="pb-phase-nav">
+                        <button class="pbp on" data-pbph="0">Phase 1 · Days 1–14</button>
+                        <button class="pbp" data-pbph="1">Phase 2 · Days 15–30</button>
+                        <button class="pbp" data-pbph="2">Phase 3 · Month 2</button>
+                        <button class="pbp" data-pbph="3">Phase 4 · Month 3–4</button>
+                        <button class="pbp" data-pbph="4">Phase 5 · Month 5–6</button>
+                    </div>
+                    <div class="pb-phase on" id="pbph-0">
+                        <div class="pb-hdr">
+                            <div class="pb-title">Outreach before content. Money before followers.</div>
+                            <div class="pb-sub">Your only job this fortnight is infrastructure and warm outreach. Nothing else. Not Reels. Not logos. Not your website copy. Outreach first.</div>
+                        </div>
+                        <div class="pb-week-nav" id="pbn-0">
+                            <button class="pbw on" data-pbwk="0-0">Week 1 · Foundation</button>
+                            <button class="pbw" data-pbwk="0-1">Week 2 · First moves</button>
+                        </div>
+                        <div class="pb-week on" id="pbwk-0-0">
+                            <div class="pb-truth">
+                                <div class="pb-truth-lbl">Honest reality</div>
+                                <div class="pb-truth-t">You have zero clients and zero content. That is fine — everyone starts here. The mistake is spending week 1 making Reels. Reels don't pay rent in week 1. A message to Trion Dental might.</div>
+                            </div>
+                            <div class="pb-target">
+                                <div>
+                                    <div class="pb-t-lbl">Revenue target this week</div>
+                                    <div class="pb-t-val">₹0</div>
+                                    <div class="pb-t-sub">Setup only — no pressure to earn yet</div>
+                                </div>
+                                <div style="text-align:right">
+                                    <div class="pb-t-lbl">Win condition</div>
+                                    <div class="pb-t-val" style="font-size:16px;color:var(--t2)">Foundation done + 3 messages sent</div>
+                                </div>
+                            </div>
+                            <div class="pb-acts-title">Exact actions — in this order</div>
+                            <div class="pb-act-list" id="pbal-0-0"></div>
+                        </div>
+                        <div class="pb-week" id="pbwk-0-1">
+                            <div class="pb-truth">
+                                <div class="pb-truth-lbl">Honest reality</div>
+                                <div class="pb-truth-t">Most people ghost. That is normal. If 5 people get your message and 1 replies with genuine interest, week 2 is a success. You need one conversation, not five clients.</div>
+                            </div>
+                            <div class="pb-target">
+                                <div>
+                                    <div class="pb-t-lbl">Revenue possible</div>
+                                    <div class="pb-t-val">₹0–12k</div>
+                                    <div class="pb-t-sub">If someone bites fast</div>
+                                </div>
+                                <div style="text-align:right">
+                                    <div class="pb-t-lbl">Win condition</div>
+                                    <div class="pb-t-val" style="font-size:16px;color:var(--t2)">1 active convo + first post live</div>
+                                </div>
+                            </div>
+                            <div class="pb-acts-title">Exact actions — in this order</div>
+                            <div class="pb-act-list" id="pbal-0-1"></div>
+                        </div>
+                    </div>
+                    <div class="pb-phase" id="pbph-1">
+                        <div class="pb-hdr">
+                            <div class="pb-title">Close the first project. Document everything.</div>
+                            <div class="pb-sub">Days 15–30. Your only job is to get money from one person. Even ₹8k. Even free if you get a case study. The case study is the real asset — it unlocks the next 5 clients.</div>
+                        </div>
+                        <div class="pb-week-nav" id="pbn-1">
+                            <button class="pbw on" data-pbwk="1-0">Week 3 · Close</button>
+                            <button class="pbw" data-pbwk="1-1">Week 4 · Deliver</button>
+                        </div>
+                        <div class="pb-week on" id="pbwk-1-0">
+                            <div class="pb-truth">
+                                <div class="pb-truth-lbl">Honest reality</div>
+                                <div class="pb-truth-t">You will feel awkward asking for money. Do it anyway. The discomfort of the ask lasts 10 seconds. The relief of a paid project lasts a month. A vague "let me know if you need anything" is not outreach — it is hiding.</div>
+                            </div>
+                            <div class="pb-target">
+                                <div>
+                                    <div class="pb-t-lbl">Revenue target</div>
+                                    <div class="pb-t-val">₹8–12k</div>
+                                </div>
+                                <div style="text-align:right">
+                                    <div class="pb-t-lbl">Win condition</div>
+                                    <div class="pb-t-val" style="font-size:16px;color:var(--t2)">1 project confirmed, even free</div>
+                                </div>
+                            </div>
+                            <div class="pb-acts-title">Exact actions</div>
+                            <div class="pb-act-list" id="pbal-1-0"></div>
+                        </div>
+                        <div class="pb-week" id="pbwk-1-1">
+                            <div class="pb-truth">
+                                <div class="pb-truth-lbl">Honest reality</div>
+                                <div class="pb-truth-t">Most designers deliver the work and move on. That is a massive mistake. The case study you document this week is what closes your next 3 clients. Documentation is not optional extra work — it is part of the deliverable.</div>
+                            </div>
+                            <div class="pb-target">
+                                <div>
+                                    <div class="pb-t-lbl">Revenue target</div>
+                                    <div class="pb-t-val">₹12k collected</div>
+                                </div>
+                                <div style="text-align:right">
+                                    <div class="pb-t-lbl">Win condition</div>
+                                    <div class="pb-t-val" style="font-size:16px;color:var(--t2)">Project done + case study drafted</div>
+                                </div>
+                            </div>
+                            <div class="pb-acts-title">Exact actions</div>
+                            <div class="pb-act-list" id="pbal-1-1"></div>
+                        </div>
+                    </div>
+                    <div class="pb-phase" id="pbph-2">
+                        <div class="pb-hdr">
+                            <div class="pb-title">Month 2 — Pitch for recurring income.</div>
+                            <div class="pb-sub">One project is not a business. A retainer is. This month you attempt your first monthly retainer pitch — to the client you just delivered for, or a new warm lead.</div>
+                        </div>
+                        <div class="pb-truth">
+                            <div class="pb-truth-lbl">Honest reality</div>
+                            <div class="pb-truth-t">A ₹25k retainer feels like a big ask. It isn't — if you frame it correctly. You're not selling "design work." You're selling "I handle your entire brand presence so you don't have to think about it." That is worth ₹25k to a dental clinic doing ₹5L+ monthly revenue.</div>
+                        </div>
+                        <div class="pb-target">
+                            <div>
+                                <div class="pb-t-lbl">Revenue target month 2</div>
+                                <div class="pb-t-val">₹25–40k</div>
+                            </div>
+                            <div style="text-align:right">
+                                <div class="pb-t-lbl">Win condition</div>
+                                <div class="pb-t-val" style="font-size:16px;color:var(--t2)">1 retainer OR 2–3 projects</div>
+                            </div>
+                        </div>
+                        <div class="pb-acts-title">Month 2 priorities — in order</div>
+                        <div class="pb-act-list" id="pbal-2-0"></div>
+                        <div class="pb-div"></div>
+                        <div class="pb-acts-title">The retainer pitch script</div>
+                        <div class="pb-script">
+                            <div class="pb-script-lbl">Send this within 48 hours of delivering your first project</div>
+                            "Hey [name], glad you loved the work. One thing I've noticed — brands like yours typically struggle to keep this level of quality consistent every month. That's exactly what SVTCH handles — we become your full creative team on retainer. For ₹25k/month we manage all your creatives, social content, and campaign visuals. Want me to send over what that looks like?"
+                        </div>
+                        <div class="pb-warn">
+                            <div class="pb-warn-lbl">Do not do this</div>
+                            <div class="pb-warn-t">Don't send a long proposal to someone who hasn't said yes yet. Get the verbal interest first — "sounds interesting, tell me more" — then send the deck. Proposals that arrive before interest get ignored.</div>
+                        </div>
+                    </div>
+                    <div class="pb-phase" id="pbph-3">
+                        <div class="pb-hdr">
+                            <div class="pb-title">Month 3–4 — Build to 2 retainers.</div>
+                            <div class="pb-sub">By month 3 you should have at least 1 retainer and consistent content going. Month 4 is where content starts converting — not viral fame, but 1–2 extra DMs that turn into projects.</div>
+                        </div>
+                        <div class="pb-truth">
+                            <div class="pb-truth-lbl">Honest reality</div>
+                            <div class="pb-truth-t">Month 3 is psychologically the hardest. You have some money but you're not at target. Content isn't blowing up. Outreach feels repetitive. This is where 80% of people quit or slow down. The ones who don't are the ones who hit ₹80k by month 6.</div>
+                        </div>
+                        <div class="pb-target">
+                            <div>
+                                <div class="pb-t-lbl">Revenue target M3</div>
+                                <div class="pb-t-val">₹40–55k</div>
+                            </div>
+                            <div style="text-align:right">
+                                <div class="pb-t-lbl">Revenue target M4</div>
+                                <div class="pb-t-val">₹55–70k</div>
+                            </div>
+                        </div>
+                        <div class="pb-acts-title">What to focus on — in order</div>
+                        <div class="pb-act-list" id="pbal-3-0"></div>
+                        <div class="pb-div"></div>
+                        <div class="pb-win">
+                            <div class="pb-win-lbl">The compounding moment</div>
+                            <div class="pb-win-t">Somewhere in month 3–4 someone will DM you from content. It will feel random. It isn't — it's the result of 6–8 weeks of consistent posting. This is the signal that your content flywheel is starting. Do not slow down when this happens. Double down.</div>
+                        </div>
+                    </div>
+                    <div class="pb-phase" id="pbph-4">
+                        <div class="pb-hdr">
+                            <div class="pb-title">Month 5–6 — ₹80k. System running.</div>
+                            <div class="pb-sub">3 Growth Retainers at ₹25k = ₹75k. One brand collab or template sale clears ₹80k. By month 6 this is your floor, not your ceiling.</div>
+                        </div>
+                        <div class="pb-truth">
+                            <div class="pb-truth-lbl">Honest reality</div>
+                            <div class="pb-truth-t">You will not have 3 perfect retainer clients by month 5. You might have 2 retainers + 2 project clients + content income. That's fine — the number hits ₹80k either way. Stop waiting for the perfect setup and count what is actually coming in.</div>
+                        </div>
+                        <div class="pb-target">
+                            <div>
+                                <div class="pb-t-lbl">Revenue target M5</div>
+                                <div class="pb-t-val">₹70–80k</div>
+                            </div>
+                            <div style="text-align:right">
+                                <div class="pb-t-lbl">Revenue target M6</div>
+                                <div class="pb-t-val">₹80k+ floor</div>
+                            </div>
+                        </div>
+                        <div class="pb-acts-title">What changes at month 5–6</div>
+                        <div class="pb-act-list" id="pbal-4-0"></div>
+                        <div class="pb-div"></div>
+                        <div class="pb-win">
+                            <div class="pb-win-lbl">UK Visa note</div>
+                            <div class="pb-win-t">By month 6 you have: a running agency (SVTCH), documented client work, a personal brand presence (2171 VU), consistent income, and case studies. That is literally the profile the Global Talent Visa Arts & Culture route is looking for. Every month of work now is also building your visa case.</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- CHANGELOG -->
+                <div class="page" id="page-changelog">
+                    <div class="pg-hdr">
+                        <div class="pg-eye">Version History · SVTCH Command Center</div>
+                        <div class="pg-title">
+                            CHANGE<span class="ac">LOG.</span>
+                        </div>
+                        <div class="pg-sub">Every update to this file · Most recent first · Host on GitHub Pages for zero-download updates</div>
+                    </div>
+                    <div class="gp-ac" style="font-family:var(--f2);font-size:9px;line-height:1.85;color:var(--t2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:18px">
+                        <span style="color:var(--ac);font-weight:700">How to update without re-downloading ·</span>
+                        Host this file on GitHub Pages (free). When there is a new build, open github.com → your repo → index.html → edit icon → select all → paste new code → commit. Refresh your bookmark in 30 seconds. Done.
+      
+                    </div>
+                    <div class="gp">
+                        <div class="gp-inner" id="changelog-entries">
+                            <div class="cl-entry">
+                                <div class="cl-ver">
+                                    v1.3<span class="cl-new">latest</span>
+                                </div>
+                                <div class="cl-meta">
+                                    <div class="cl-date">2026-03-15</div>
+                                    <div class="cl-desc">
+                                        Added <b>Playbook section</b>
+                                        — 5 phases, week-by-week execution guide, 30 tickable actions with priority tags, retainer pitch script, truth boxes, win conditions, and progress bar. Added <b>Changelog section</b>
+                                        (this page). Added build version tag in sidebar footer and HTML comment.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cl-entry">
+                                <div class="cl-ver">v1.2</div>
+                                <div class="cl-meta">
+                                    <div class="cl-date">2026-03-15</div>
+                                    <div class="cl-desc">Full redesign to match SVTCH website brand identity — Bebas Neue + Space Mono + DM Sans fonts, black/yellow (#FFDE58) palette, 72px grid background, noise texture overlay, glassmorphism panels with backdrop-filter blur on all cards, custom dual-layer cursor with lag ring, scrolling ticker on dashboard.</div>
+                                </div>
+                            </div>
+                            <div class="cl-entry">
+                                <div class="cl-ver">v1.1</div>
+                                <div class="cl-meta">
+                                    <div class="cl-date">2026-03-15</div>
+                                    <div class="cl-desc">First standalone downloadable HTML file. 7 sections: Dashboard, Hook Vault (30 hooks), Revenue System (mixer + packages + streams + timeline), 90-Day Roadmap (19 tickable tasks), Content OS (3 pillars + rules + rhythm), Client Tracker (with MRR calculator), Notes (auto-save). All data persists in localStorage.</div>
+                                </div>
+                            </div>
+                            <div class="cl-entry">
+                                <div class="cl-ver">v1.0</div>
+                                <div class="cl-meta">
+                                    <div class="cl-date">2026-03-15</div>
+                                    <div class="cl-desc">Initial in-chat widget version. Hook Matrix (10 templates × 3 platforms = 30 hooks), Revenue Calculator (interactive mixer), Brand Ecosystem diagram, 90-Day Growth System, Content System — all as interactive Claude widgets inside the conversation.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:6px;font-family:var(--f2);font-size:9px;color:var(--t4);line-height:1.8;text-transform:uppercase;letter-spacing:.07em;padding:12px 0">Future updates will appear here. Each update from this chat will be a new version entry. GitHub Pages recommended for zero-download workflow — one bookmark, always current.
+      </div>
+                </div>
+            </main>
+        </div>
+        <div id="toast"></div>
+        <script>
+            // CURSOR
+            const CUR = document.getElementById('cur')
+              , CURR = document.getElementById('cur-r');
+            let mx = 0
+              , my = 0
+              , rx = 0
+              , ry = 0;
+            document.addEventListener('mousemove', e => {
+                mx = e.clientX;
+                my = e.clientY;
+                CUR.style.left = mx + 'px';
+                CUR.style.top = my + 'px'
+            }
+            );
+            (function aR() {
+                rx += (mx - rx) * .11;
+                ry += (my - ry) * .11;
+                CURR.style.left = rx + 'px';
+                CURR.style.top = ry + 'px';
+                requestAnimationFrame(aR)
+            }
+            )();
+
+            // STORAGE
+            const S = {
+                g: (k, fb) => {
+                    try {
+                        const v = localStorage.getItem(k);
+                        return v !== null ? JSON.parse(v) : fb
+                    } catch {
+                        return fb
+                    }
+                }
+                ,
+                s: (k, v) => {
+                    try {
+                        localStorage.setItem(k, JSON.stringify(v))
+                    } catch {}
+                }
+            };
+
+            // NAV
+            function nav(p) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('on', n.dataset.page === p));
+                document.querySelectorAll('.page').forEach(pg => pg.classList.toggle('on', pg.id === 'page-' + p));
+            }
+            document.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', () => nav(n.dataset.page)));
+
+            // TOAST
+            function toast(m) {
+                const t = document.getElementById('toast');
+                t.textContent = m;
+                t.classList.add('show');
+                setTimeout( () => t.classList.remove('show'), 2200)
+            }
+
+            // HOOKS DATA
+            const CAT = {
+                pattern: {
+                    l: 'Pattern Interrupt',
+                    c: '#D85A30'
+                },
+                psych: {
+                    l: 'Psych Trigger',
+                    c: '#9B7EFF'
+                },
+                curiosity: {
+                    l: 'Curiosity Gap',
+                    c: '#1DB87A'
+                },
+                power: {
+                    l: 'Power Phrase',
+                    c: '#E6A817'
+                },
+                viral: {
+                    l: 'Viral Structure',
+                    c: '#4A9EFF'
+                }
+            };
+            const PF = {
+                reels: {
+                    i: '🎬',
+                    l: 'Reels'
+                },
+                carousel: {
+                    i: '🖼',
+                    l: 'Carousel'
+                },
+                shorts: {
+                    i: '▶',
+                    l: 'YT Shorts'
+                }
+            };
+            const HKS = [{
+                id: '01',
+                n: 'The Lie Exposé',
+                cat: 'pattern',
+                pf: 'reels',
+                t: `Nobody told you that having a "clean" portfolio is actually why clients aren't calling you back — and here's the proof.`,
+                ex: `Minimalist portfolio = losing clients. Proof incoming.`,
+                tags: ['identity threat', 'shame reversal', 'proof promise']
+            }, {
+                id: '01',
+                n: 'The Lie Exposé',
+                cat: 'pattern',
+                pf: 'carousel',
+                t: `Nobody told you that adding more case studies to your portfolio actually makes clients trust you less. Slide 2 shows exactly why.`,
+                ex: `More ≠ trust. Slide 2 explains.`,
+                tags: ['belief attack', 'swipe drive']
+            }, {
+                id: '01',
+                n: 'The Lie Exposé',
+                cat: 'pattern',
+                pf: 'shorts',
+                t: `Nobody told you that a beautiful portfolio without this one page is making you invisible to serious clients — and here's the proof.`,
+                ex: `Your portfolio is missing its most important page.`,
+                tags: ['open loop', 'proof promise']
+            }, {
+                id: '02',
+                n: 'The Method Shock',
+                cat: 'pattern',
+                pf: 'reels',
+                t: `You've been presenting your design work the wrong way this entire time. Here's what a portfolio that actually closes clients looks like.`,
+                ex: `You've been pitching wrong. Here's what closing looks like.`,
+                tags: ['ego disruption', 'authority signal']
+            }, {
+                id: '02',
+                n: 'The Method Shock',
+                cat: 'pattern',
+                pf: 'carousel',
+                t: `You've been building your portfolio the wrong way this entire time. Here's what a brand-ready design identity actually looks like.`,
+                ex: `Wrong vs right approach — visualised.`,
+                tags: ['before/after', 'save-worthy']
+            }, {
+                id: '02',
+                n: 'The Method Shock',
+                cat: 'pattern',
+                pf: 'shorts',
+                t: `You've been pitching yourself as a "designer" this entire time. Here's what positioning that commands premium rates actually looks like.`,
+                ex: `Designer vs Strategic Creative — the rate gap.`,
+                tags: ['identity reframe', 'premium']
+            }, {
+                id: '03',
+                n: 'The Insider Secret',
+                cat: 'psych',
+                pf: 'reels',
+                t: `The Affinity Publisher trick most designers quietly use because it makes a ₹50,000/year Adobe subscription completely pointless.`,
+                ex: `Why I cancelled Adobe and what I use instead.`,
+                tags: ['secret knowledge', 'loss aversion']
+            }, {
+                id: '03',
+                n: 'The Insider Secret',
+                cat: 'psych',
+                pf: 'carousel',
+                t: `The Canva Pro workflow most personal brand designers quietly use because it makes expensive branding agencies look completely overpriced.`,
+                ex: `Canva Pro > ₹2L agency. Here's the workflow.`,
+                tags: ['exclusivity', 'status gain']
+            }, {
+                id: '03',
+                n: 'The Insider Secret',
+                cat: 'psych',
+                pf: 'shorts',
+                t: `The portfolio layout trick most high-earning designers quietly use because it makes a design degree look completely unnecessary.`,
+                ex: `No degree. This layout does the convincing.`,
+                tags: ['anti-gatekeeping', 'self-taught']
+            }, {
+                id: '04',
+                n: 'The Status Test',
+                cat: 'psych',
+                pf: 'reels',
+                t: `Clients can tell in 3 seconds whether you're a real designer — and most of you are failing the portfolio first-impression test.`,
+                ex: `3 seconds. Most portfolios fail it.`,
+                tags: ['ego threat', 'social proof']
+            }, {
+                id: '04',
+                n: 'The Status Test',
+                cat: 'psych',
+                pf: 'carousel',
+                t: `Clients can tell in 3 seconds whether your brand is built or borrowed — and most designers are failing the consistency test.`,
+                ex: `Built vs borrowed — swipe to check yours.`,
+                tags: ['identity check', 'swipe bait']
+            }, {
+                id: '04',
+                n: 'The Status Test',
+                cat: 'psych',
+                pf: 'shorts',
+                t: `Clients can tell in 5 seconds whether you're worth ₹20k or ₹1L/month — and most freelancers are failing the positioning test.`,
+                ex: `₹20k vs ₹1L freelancer — what separates them.`,
+                tags: ['price gap', 'identity']
+            }, {
+                id: '05',
+                n: 'The Open Loop',
+                cat: 'curiosity',
+                pf: 'reels',
+                t: `I rebuilt my entire portfolio from scratch using only Affinity Designer for 30 days. The results were... not what I expected.`,
+                ex: `30 days. One tool. Everything changed.`,
+                tags: ['open loop', 'experiment']
+            }, {
+                id: '05',
+                n: 'The Open Loop',
+                cat: 'curiosity',
+                pf: 'carousel',
+                t: `I removed every project from my portfolio and kept only 3 pieces for 30 days. The results were... not what I expected.`,
+                ex: `I deleted 90% of my work. Here's what happened.`,
+                tags: ['extreme constraint', 'open loop']
+            }, {
+                id: '05',
+                n: 'The Open Loop',
+                cat: 'curiosity',
+                pf: 'shorts',
+                t: `I stopped posting design tips for 30 days and only shared my personal brand journey. The results were... not what I expected.`,
+                ex: `No tips. Only truth. Watch what happened.`,
+                tags: ['meta', 'personal brand']
+            }, {
+                id: '06',
+                n: 'The Missing Step',
+                cat: 'curiosity',
+                pf: 'reels',
+                t: `Every portfolio tutorial skips this one step — and it's exactly why your work still looks like a student project.`,
+                ex: `The step every portfolio tutorial skips.`,
+                tags: ['knowledge gap', 'frustration']
+            }, {
+                id: '06',
+                n: 'The Missing Step',
+                cat: 'curiosity',
+                pf: 'carousel',
+                t: `Every personal branding guide skips this one step — and it's exactly why your visual identity still looks like a template.`,
+                ex: `Why your brand still looks like a template.`,
+                tags: ['ego sting', 'exclusive insight']
+            }, {
+                id: '06',
+                n: 'The Missing Step',
+                cat: 'curiosity',
+                pf: 'shorts',
+                t: `Every freelance design tutorial skips this one step — and it's exactly why clients still ghost you after the first call.`,
+                ex: `The step that stops client ghosting.`,
+                tags: ['pain validation', 'trust']
+            }, {
+                id: '07',
+                n: 'The Hard Stop',
+                cat: 'power',
+                pf: 'reels',
+                t: `Stop showing every project you've ever made right now. Curate ruthlessly instead. Your portfolio will never look the same.`,
+                ex: `Stop adding. Start cutting.`,
+                tags: ['direct command', 'transformation']
+            }, {
+                id: '07',
+                n: 'The Hard Stop',
+                cat: 'power',
+                pf: 'carousel',
+                t: `Stop using Canva templates as-is right now. Break the grid instead. Your brand identity will never look the same.`,
+                ex: `The grid is a prison. Break it.`,
+                tags: ['design authority', 'save rate']
+            }, {
+                id: '07',
+                n: 'The Hard Stop',
+                cat: 'power',
+                pf: 'shorts',
+                t: `Stop describing yourself as a "graphic designer" right now. Own your niche instead. Your client pipeline will never look the same.`,
+                ex: `Stop calling yourself a graphic designer.`,
+                tags: ['positioning', 'identity shift']
+            }, {
+                id: '08',
+                n: 'The Proof Bomb',
+                cat: 'power',
+                pf: 'reels',
+                t: `847 designers made this exact portfolio mistake last week. Here's how to fix it in 60 seconds.`,
+                ex: `847 people. Same mistake. 60-second fix.`,
+                tags: ['social proof', 'specificity']
+            }, {
+                id: '08',
+                n: 'The Proof Bomb',
+                cat: 'power',
+                pf: 'carousel',
+                t: `1,200 designers made this exact personal brand mistake last month. Here's how to fix it in one slide.`,
+                ex: `1,200 designers. One slide fix.`,
+                tags: ['scale proof', 'swipe drive']
+            }, {
+                id: '08',
+                n: 'The Proof Bomb',
+                cat: 'power',
+                pf: 'shorts',
+                t: `3,400 creatives made this exact self-presentation mistake last week. Here's how to fix it in under 90 seconds.`,
+                ex: `3,400 creatives. 90 seconds.`,
+                tags: ['urgency', 'format match']
+            }, {
+                id: '09',
+                n: 'The Transformation Arc',
+                cat: 'viral',
+                pf: 'reels',
+                t: `Getting ignored by clients → Landing ₹80k projects → 8 weeks. The only thing that changed: my portfolio's opening slide.`,
+                ex: `₹0 → ₹80k. One slide changed everything.`,
+                tags: ['transformation', 'single pivot']
+            }, {
+                id: '09',
+                n: 'The Transformation Arc',
+                cat: 'viral',
+                pf: 'carousel',
+                t: `Generic freelancer → Recognisable design brand → 6 weeks. The only thing that changed: one visual identity decision.`,
+                ex: `Before/after brand identity — swipe to see.`,
+                tags: ['before/after', 'save-worthy']
+            }, {
+                id: '09',
+                n: 'The Transformation Arc',
+                cat: 'viral',
+                pf: 'shorts',
+                t: `Zero inbound → 3 client DMs a week → 45 days. The only thing that changed: how I present my work online.`,
+                ex: `45 days. 3 DMs/week. What I changed.`,
+                tags: ['achievable proof', 'DMs']
+            }, {
+                id: '10',
+                n: 'The Insider Countdown',
+                cat: 'viral',
+                pf: 'reels',
+                t: `7 things that separate forgettable portfolios from ones that get designers hired — and #4 is the one nobody talks about.`,
+                ex: `7 things. #4 changes everything.`,
+                tags: ['curiosity gap', 'retention']
+            }, {
+                id: '10',
+                n: 'The Insider Countdown',
+                cat: 'viral',
+                pf: 'carousel',
+                t: `5 things that separate designers who get noticed from ones who stay invisible — and #3 is the one nobody posts about.`,
+                ex: `5 things. #3 is the secret.`,
+                tags: ['exclusive', 'save rate']
+            }, {
+                id: '10',
+                n: 'The Insider Countdown',
+                cat: 'viral',
+                pf: 'shorts',
+                t: `6 things that separate ₹20k/month freelancers from ₹1L/month designers — and #5 is the one nobody admits.`,
+                ex: `₹20k vs ₹1L. #5 is uncomfortable.`,
+                tags: ['shame trigger', 'price gap']
+            }, ];
+            let hkC = 'all'
+              , hkP = 'all';
+            function initHooks() {
+                document.getElementById('hk-cats').innerHTML = ['all', 'pattern', 'psych', 'curiosity', 'power', 'viral'].map(c => `<button class="btn${c === 'all' ? ' on active' : ''}" onclick="sHC('${c}',this)">${c === 'all' ? 'All Categories' : CAT[c].l}</button>`).join('');
+                document.getElementById('hk-pfs').innerHTML = ['all', 'reels', 'carousel', 'shorts'].map(p => `<button class="btn${p === 'all' ? ' on active' : ''}" onclick="sHP('${p}',this)">${p === 'all' ? 'All Platforms' : PF[p].l}</button>`).join('');
+                rHooks();
+            }
+            function sHC(c, el) {
+                hkC = c;
+                document.querySelectorAll('#hk-cats .btn').forEach(b => b.classList.remove('on', 'active'));
+                el.classList.add('on', 'active');
+                rHooks();
+            }
+            function sHP(p, el) {
+                hkP = p;
+                document.querySelectorAll('#hk-pfs .btn').forEach(b => b.classList.remove('on', 'active'));
+                el.classList.add('on', 'active');
+                rHooks();
+            }
+            function rHooks() {
+                const data = HKS.filter(h => (hkC === 'all' || h.cat === hkC) && (hkP === 'all' || h.pf === hkP));
+                document.getElementById('hk-cnt').textContent = `Showing ${data.length} hooks`;
+                document.getElementById('hk-list').innerHTML = data.map(h => {
+                    const c = CAT[h.cat];
+                    return `<div class="hk" style="border-left-color:${c.c}">
+      <div class="hk-inner">
+        <div class="hk-top">
+          <span class="hk-id">${h.id}</span>
+          <span class="hk-cat" style="color:${c.c};border-color:${c.c}20;background:${c.c}10">${c.l}</span>
+          <span class="hk-pf">${PF[h.pf].i} ${PF[h.pf].l}</span>
+        </div>
+        <div class="hk-name">${h.n}</div>
+        <div class="hk-text" style="border-color:${c.c}">${h.t}</div>
+        <div class="hk-el">Plug-in example</div>
+        <div class="hk-ex">${h.ex}</div>
+        <div class="hk-foot">
+          <div class="hk-tags">${h.tags.map(t => `<span class="hk-tag">${t}</span>`).join('')}</div>
+          <button class="btn" onclick="cpHook(this,'${encodeURIComponent(h.t)}')">Copy Hook</button>
+        </div>
+      </div>
+    </div>`;
+                }
+                ).join('');
+            }
+            function cpHook(b, e) {
+                navigator.clipboard.writeText(decodeURIComponent(e)).catch( () => {}
+                );
+                const o = b.textContent;
+                b.textContent = 'Copied!';
+                b.classList.add('btn-ok');
+                setTimeout( () => {
+                    b.textContent = o;
+                    b.classList.remove('btn-ok')
+                }
+                , 1800)
+            }
+
+            // REVENUE
+            const SVCS = [{
+                n: 'Starter Brand Project',
+                p: 12000,
+                c: '#8A8A8A'
+            }, {
+                n: 'Growth Retainer',
+                p: 25000,
+                c: '#FFDE58'
+            }, {
+                n: 'Premium Partner',
+                p: 45000,
+                c: '#4A9EFF'
+            }, {
+                n: 'Brand Collab (2171 VU)',
+                p: 6000,
+                c: '#1DB87A'
+            }, {
+                n: 'Template / Digital Sales',
+                p: 5000,
+                c: '#1DB87A'
+            }];
+            const TGT = 80000;
+            let mxC = S.g('svtch_mix', [0, 0, 0, 0, 0]);
+            function initRevenue() {
+                rMixer();
+                document.getElementById('rev-tabs').querySelectorAll('.tab').forEach(t => {
+                    t.addEventListener('click', () => {
+                        document.getElementById('rev-tabs').querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
+                        t.classList.add('on');
+                        ['mixer', 'pkgs', 'streams', 'timeline'].forEach(id => document.getElementById('rv-' + id).style.display = 'none');
+                        document.getElementById('rv-' + t.dataset.rt).style.display = 'block'
+                    }
+                    );
+                }
+                );
+                rPkgs();
+                rStr();
+                rTL();
+            }
+            function rMixer() {
+                document.getElementById('rv-mixer').innerHTML = `
+  <div class="tgt">
+    <div><div class="tgt-lbl">Monthly Target</div><div class="tgt-num">₹80,000</div><div class="tgt-curr">Current: <span id="r-curr" style="color:var(--ac)">₹0</span></div></div>
+    <div style="flex:1;min-width:160px"><div style="font-family:var(--f2);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,222,88,.55);margin-bottom:9px">Target Progress</div><div class="ptrack" style="height:8px"><div class="pfill" id="r-bar" style="background:var(--ac);width:0%;height:8px"></div></div><div class="tgt-pct" id="r-pct">0%</div></div>
+  </div>
+  ${SVCS.map( (s, i) => `<div class="mrow"><div class="minfo"><div class="mn">${s.n}</div><div class="mpl">₹${s.p.toLocaleString('en-IN')} each</div></div><div class="mctrl"><button class="mxb" onclick="adjM(${i},-1)">−</button><div class="mxcnt" id="mxn${i}">${mxC[i]}</div><button class="mxb" onclick="adjM(${i},1)">+</button><div class="mrev" id="mxr${i}" style="color:${s.c}">₹${(s.p * mxC[i]).toLocaleString('en-IN')}</div></div></div>`).join('')}
+  <div class="g3" style="margin-top:16px">
+    <div class="st"><div class="st-n" id="r-tot">₹0</div><div class="st-l">Monthly Total</div></div>
+    <div class="st"><div class="st-n" id="r-cl" style="color:var(--blue)">0</div><div class="st-l">Total Clients</div></div>
+    <div class="st"><div class="st-n" id="r-gap" style="color:var(--red)">₹80k</div><div class="st-l">Gap to Target</div></div>
+  </div>`;
+                uMixer();
+            }
+            function adjM(i, d) {
+                mxC[i] = Math.max(0, mxC[i] + d);
+                document.getElementById('mxn' + i).textContent = mxC[i];
+                document.getElementById('mxr' + i).textContent = '₹' + (SVCS[i].p * mxC[i]).toLocaleString('en-IN');
+                uMixer();
+                S.s('svtch_mix', mxC);
+            }
+            function uMixer() {
+                let t = 0
+                  , c = 0;
+                SVCS.forEach( (s, i) => {
+                    t += s.p * mxC[i];
+                    c += mxC[i];
+                }
+                );
+                const pct = Math.min(100, Math.round(t / TGT * 100));
+                const b = document.getElementById('r-bar');
+                if (!b)
+                    return;
+                b.style.width = pct + '%';
+                document.getElementById('r-pct').textContent = pct + '%';
+                document.getElementById('r-curr').textContent = '₹' + t.toLocaleString('en-IN');
+                document.getElementById('r-tot').textContent = '₹' + t.toLocaleString('en-IN');
+                document.getElementById('r-cl').textContent = c;
+                const g = Math.max(0, TGT - t);
+                const ge = document.getElementById('r-gap');
+                ge.textContent = g === 0 ? '✓ HIT!' : '₹' + g.toLocaleString('en-IN');
+                ge.style.color = g === 0 ? 'var(--green)' : 'var(--red)';
+                uDash();
+            }
+            function rPkgs() {
+                document.getElementById('rv-pkgs').innerHTML = [{
+                    nm: 'Starter Brand',
+                    tg: 'One-time project · Entry point',
+                    pr: '₹12,000',
+                    cy: 'per project',
+                    f: false,
+                    d: 'First-client package. Gets you a case study fast. Never go below this floor.',
+                    it: ['Logo + 2 variations', 'Color palette + typography system', '3 social media templates', 'Brand guidelines PDF (mini)', '1 revision round'],
+                    cl: '7 clients = ₹84k (not scalable)',
+                    ba: 'Build case studies',
+                    up: 'After delivery → pitch Growth Retainer.'
+                }, {
+                    nm: 'Growth Retainer',
+                    tg: 'Monthly · Primary income engine',
+                    pr: '₹25,000',
+                    cy: 'per month',
+                    f: true,
+                    d: 'Core offer. 3 retainer clients = ₹75k/month. Recurring, predictable, relationship-based.',
+                    it: ['12 social media creatives/month', '2 ad creatives or campaign visuals', '4 short-form video edits', 'Monthly strategy check-in call', '48-hour priority turnaround'],
+                    cl: '3 clients = ₹75,000/month',
+                    ba: 'Hits target alone',
+                    up: 'After 2 months → pitch Premium tier.'
+                }, {
+                    nm: 'Premium Partner',
+                    tg: 'Monthly · Full creative partner',
+                    pr: '₹45,000',
+                    cy: 'per month',
+                    f: false,
+                    d: 'North star tier. 1 Premium + 1 Growth = ₹70k. For businesses with active marketing budgets.',
+                    it: ['Everything in Growth Retainer', 'Full campaign planning + execution', 'Ad creative A/B testing', '8 video edits/month', 'Quarterly strategy session', 'WhatsApp priority access'],
+                    cl: '2 clients = ₹90,000/month',
+                    ba: 'Exceeds target',
+                    up: 'Target: dental clinics, jewellery, real estate, D2C.'
+                }].map(p => `<div class="pkg${p.f ? ' feat' : ''}">${p.f ? '<div class="pkg-star">Sweet Spot</div>' : ''}<div class="pkg-top"><div><div class="pkg-name">${p.nm}</div><div class="pkg-tag">${p.tg}</div></div><div><div class="pkg-price">${p.pr}</div><div class="pkg-cycle">${p.cy}</div></div></div><div class="pkg-desc">${p.d}</div><div class="pkg-items">${p.it.map(i => `<div class="pkg-item">${i}</div>`).join('')}</div><div class="pkg-foot"><span style="font-family:var(--f2);font-size:9px;color:var(--t4)">${p.cl}</span><span style="font-family:var(--f2);font-size:9px;padding:2px 10px;border:1px solid rgba(255,222,88,.3);color:var(--ac)">${p.ba}</span></div><div class="up">Upsell path: ${p.up}</div></div>`).join('');
+            }
+            function rStr() {
+                document.getElementById('rv-streams').innerHTML = [{
+                    lab: 'Phase 1 — Active income (Month 1–3)',
+                    c: 'var(--ac)',
+                    it: [{
+                        ph: 'Primary',
+                        nm: 'SVTCH Client Retainers',
+                        d: 'Main engine. 3 Growth Retainers = ₹75k. Every other stream is secondary until this is stable.',
+                        a: '₹75k',
+                        w: 'Target M3',
+                        c: 'var(--ac)'
+                    }, {
+                        ph: 'Secondary',
+                        nm: 'SVTCH One-time Projects',
+                        d: 'Brand identity, campaigns. ₹12k starter. Build case studies, convert to retainers.',
+                        a: '₹12–25k',
+                        w: 'Per project',
+                        c: 'var(--ac)'
+                    }]
+                }, {
+                    lab: 'Phase 2 — Content income (Month 4–6)',
+                    c: 'var(--blue)',
+                    it: [{
+                        ph: 'Creator',
+                        nm: 'Instagram Brand Collabs',
+                        d: '2171 VU at 2k+ engaged followers. Design tools, SaaS, creative platforms.',
+                        a: '₹8–20k',
+                        w: 'Month 4+',
+                        c: 'var(--blue)'
+                    }, {
+                        ph: 'Creator',
+                        nm: 'YouTube Shorts Ad Revenue',
+                        d: '1k subs to qualify. Slow to build but compounds. ₹3–10k/month at 10k+ subs.',
+                        a: '₹3–10k',
+                        w: 'Month 5+',
+                        c: 'var(--blue)'
+                    }]
+                }, {
+                    lab: 'Phase 3 — Passive income (Month 6+)',
+                    c: 'var(--green)',
+                    it: [{
+                        ph: 'Passive',
+                        nm: 'Canva / Digital Template Sales',
+                        d: 'Reactivate Etsy/Gumroad with niche templates — dental, jewellery, real estate.',
+                        a: '₹5–15k',
+                        w: 'Month 6+',
+                        c: 'var(--green)'
+                    }, {
+                        ph: 'Passive',
+                        nm: 'Design Course / Workshop',
+                        d: '3k+ followers + proof. Niche-specific: "Brand design for clinics." ₹1,499–₹3,999.',
+                        a: '₹10–30k',
+                        w: 'Month 8+',
+                        c: 'var(--green)'
+                    }]
+                }].map(s => `<div style="margin-bottom:20px"><div class="stitle" style="margin-bottom:10px;color:${s.c}">${s.lab}</div>${s.it.map(i => `<div class="stre"><div><div class="stre-ph" style="color:${i.c}">${i.ph}</div><div class="stre-nm">${i.nm}</div><div class="stre-d">${i.d}</div></div><div><div class="stre-amt" style="color:${i.c}">${i.a}</div><div class="stre-wh">${i.w}</div></div></div>`).join('')}</div>`).join('');
+            }
+            function rTL() {
+                document.getElementById('rv-timeline').innerHTML = [{
+                    m: 'Month 1',
+                    t: '₹0–12k',
+                    c: 'var(--red)',
+                    tt: 'Setup + First Client',
+                    it: ['Infrastructure done — profiles, website, proposal template live', 'Content engine started — 15+ posts live', 'Land 1 Starter project (₹12k) — free/discounted for case study', '5+ active outreach conversations running']
+                }, {
+                    m: 'Month 2',
+                    t: '₹12–25k',
+                    c: 'var(--red)',
+                    tt: 'First Proof + Retainer Attempt',
+                    it: ['Case study live on both profiles', 'Pitch first Growth Retainer — ₹25k/month', 'Run 2 more Starter projects for cash flow', 'Content at 3–4× per week, audience growing']
+                }, {
+                    m: 'Month 3',
+                    t: '₹25–50k',
+                    c: 'var(--ac)',
+                    tt: 'First Retainer Locked',
+                    it: ['1 Growth Retainer at ₹25k — the turning point', '1–2 project clients (₹12–15k each)', 'Inbound DMs beginning to arrive', 'Refine delivery — you are now a real agency']
+                }, {
+                    m: 'Month 4',
+                    t: '₹50–65k',
+                    c: 'var(--ac)',
+                    tt: 'Two Retainers + Content Income',
+                    it: ['2 Growth Retainers = ₹50k baseline', 'First brand collab on 2171 VU (₹3–8k)', '1 project client top-up (₹12k)', 'Template store reactivated with niche products']
+                }, {
+                    m: 'Month 5',
+                    t: '₹65–80k',
+                    c: 'var(--green)',
+                    tt: 'Three Retainers — Target in Sight',
+                    it: ['3 Growth Retainers = ₹75k baseline', 'Content collabs + templates adding ₹5–10k', 'YouTube Shorts monetization beginning', 'Upgrade 1 retainer to Premium when ready']
+                }, {
+                    m: 'Month 6+',
+                    t: '₹80k+',
+                    c: 'var(--green)',
+                    tt: 'Target Hit. Now Optimise.',
+                    it: ['₹80k floor established — multiple streams active', 'Replace lower-value clients with Premium tier', 'Course/workshop launch if audience is 3k+', 'UK portfolio positioning — SVTCH = proof of business']
+                }].map(m => `<div class="tl-item"><div class="tl-l"><div class="tl-mo">${m.m}</div><div class="tl-tg" style="color:${m.c}">${m.t}</div></div><div class="tl-r"><div class="tl-tt" style="color:${m.c}">${m.tt}</div>${m.it.map(i => `<div class="tl-s">· ${i}</div>`).join('')}</div></div>`).join('');
+            }
+
+            // ROADMAP
+            const PHASES = [{
+                tt: 'Foundation',
+                ti: 'Days 1–30',
+                c: '#FFDE58',
+                tasks: [{
+                    id: 't1',
+                    tt: 'Lock your 2171 VU Instagram bio — niche, who you help, clear CTA link',
+                    br: '2171 VU',
+                    ef: '15 min · Do today'
+                }, {
+                    id: 't2',
+                    tt: 'Set up a link-in-bio page pointing to SVTCH website + portfolio + email',
+                    br: '2171 VU',
+                    ef: '1 hour · This week'
+                }, {
+                    id: 't3',
+                    tt: 'Audit SVTCH website — add working contact form or clear CTA button',
+                    br: 'SVTCH',
+                    ef: '2 hours · This week'
+                }, {
+                    id: 't4',
+                    tt: 'Create SVTCH Instagram page and post pitch deck as branded carousel',
+                    br: 'SVTCH',
+                    ef: '3 hours · Week 1'
+                }, {
+                    id: 't5',
+                    tt: 'Define your 3 content pillars: Process, Education, Personal Brand POV',
+                    br: '2171 VU',
+                    ef: '1 hour · Week 1'
+                }, {
+                    id: 't6',
+                    tt: 'Post first 3 pieces using the hook vault — 1 Reel, 1 Carousel, 1 Shorts',
+                    br: '2171 VU',
+                    ef: 'Full day · Week 1–2'
+                }, {
+                    id: 't7',
+                    tt: 'Reach out personally to 5 local businesses — offer a free brand audit',
+                    br: 'SVTCH',
+                    ef: 'Ongoing · Week 2–4'
+                }, {
+                    id: 't8',
+                    tt: 'Build a 1-page proposal template you can fill in under 30 minutes',
+                    br: 'SVTCH',
+                    ef: '2 hours · Week 2'
+                }]
+            }, {
+                tt: 'Presence',
+                ti: 'Days 31–60',
+                c: '#4A9EFF',
+                tasks: [{
+                    id: 't9',
+                    tt: 'Hit consistent posting rhythm: 3× Reels + 2× Carousels per week',
+                    br: '2171 VU',
+                    ef: 'Ongoing commitment'
+                }, {
+                    id: 't10',
+                    tt: 'Land first free or discounted project — document everything as a case study',
+                    br: 'SVTCH',
+                    ef: 'High priority'
+                }, {
+                    id: 't11',
+                    tt: 'Post 1 YouTube Short per week — repurpose top Instagram Reels',
+                    br: '2171 VU',
+                    ef: '1 hour/week'
+                }, {
+                    id: 't12',
+                    tt: 'Add SVTCH Framework section to website with a book-a-call CTA',
+                    br: 'SVTCH',
+                    ef: '2 hours'
+                }, {
+                    id: 't13',
+                    tt: 'Create "SVTCH Process Breakdown" carousel showing behind-the-scenes work',
+                    br: '2171 VU',
+                    ef: 'Half day'
+                }, {
+                    id: 't14',
+                    tt: 'Start collecting testimonials — even from content feedback not just clients',
+                    br: 'SVTCH',
+                    ef: 'Ongoing'
+                }]
+            }, {
+                tt: 'Pipeline',
+                ti: 'Days 61–90',
+                c: '#1DB87A',
+                tasks: [{
+                    id: 't15',
+                    tt: 'Publish first SVTCH case study — one before/after brand transformation counts',
+                    br: 'SVTCH',
+                    ef: 'Half day'
+                }, {
+                    id: 't16',
+                    tt: 'Turn case study into 2171 VU transformation carousel',
+                    br: '2171 VU',
+                    ef: '2 hours'
+                }, {
+                    id: 't17',
+                    tt: 'Set your pricing floor — never work below ₹12k regardless of any excuse',
+                    br: 'SVTCH',
+                    ef: 'Decision · 1 hour'
+                }, {
+                    id: 't18',
+                    tt: 'Review content analytics — double down on top 2–3 formats, cut the rest',
+                    br: '2171 VU',
+                    ef: 'Monthly review'
+                }, {
+                    id: 't19',
+                    tt: 'Close 1 paid SVTCH client by day 90 — even ₹5k–₹10k breaks the block',
+                    br: 'SVTCH',
+                    ef: 'The goal'
+                }]
+            }];
+            let TS = S.g('svtch_tasks', {});
+            function initRoadmap() {
+                document.getElementById('road-phases').innerHTML = PHASES.map(ph => `<div class="phase-blk"><div class="ph-hdr" style="--pc:${ph.c}"><div class="ph-dot" style="background:${ph.c};border-color:${ph.c}"></div><div class="ph-title" style="color:${ph.c}">${ph.tt}</div><div class="ph-time">${ph.ti}</div></div>${ph.tasks.map(t => `<div class="task${TS[t.id] ? ' done' : ''}" id="tsk-${t.id}" onclick="toggleTask('${t.id}')"><div class="tck"></div><div class="task-b"><div class="task-tt">${t.tt}</div><div class="task-mt"><span class="tbrand" style="${t.br === 'SVTCH' ? 'color:var(--blue);border-color:rgba(74,158,255,.3)' : 'color:var(--ac);border-color:rgba(255,222,88,.3)'}">${t.br}</span><span class="teff">${t.ef}</span></div></div></div>`).join('')}</div>`).join('');
+                uRoad();
+            }
+            function toggleTask(id) {
+                TS[id] = !TS[id];
+                document.getElementById('tsk-' + id).classList.toggle('done', TS[id]);
+                uRoad();
+                S.s('svtch_tasks', TS);
+            }
+            function uRoad() {
+                const tot = PHASES.reduce( (s, p) => s + p.tasks.length, 0);
+                const dn = Object.values(TS).filter(Boolean).length;
+                const pct = Math.round(dn / tot * 100);
+                document.getElementById('road-bar').style.width = pct + '%';
+                document.getElementById('road-lbl').textContent = `${dn} of ${tot} tasks done · ${pct}%`;
+                const db = document.getElementById('d-task-bar');
+                if (db) {
+                    db.style.width = pct + '%';
+                    document.getElementById('d-tasks').textContent = pct + '%';
+                    document.getElementById('d-task-done').textContent = dn + ' tasks done';
+                }
+            }
+            function resetTasks() {
+                if (!confirm('Reset all task progress?'))
+                    return;
+                TS = {};
+                S.s('svtch_tasks', {});
+                initRoadmap();
+                toast('All tasks reset');
+            }
+
+            // CONTENT
+            function initContent() {
+                document.getElementById('pillars-out').innerHTML = [{
+                    n: '01',
+                    t: 'Process & Education',
+                    f: '3× / week',
+                    c: '#FFDE58',
+                    it: ['Design tips your niche clients don\'t know', 'Tool walkthroughs — Affinity, Canva, AI tools', 'Before/after transformations (always document work)', 'Hook matrix content — use the vault every time']
+                }, {
+                    n: '02',
+                    t: 'Personal Brand POV',
+                    f: '1–2× / week',
+                    c: '#4A9EFF',
+                    it: ['Your opinions on design trends and industry myths', 'What you\'re building with SVTCH and why', 'Your UK journey — raw, honest, vulnerable moments', 'Lessons from real client work and struggles']
+                }, {
+                    n: '03',
+                    t: 'SVTCH Proof',
+                    f: '1× / week',
+                    c: '#1DB87A',
+                    it: ['Portfolio highlights and project breakdowns', 'The SVTCH framework in action — show the system', 'Client results and testimonials when available', 'Behind-the-scenes of your creative process']
+                }].map(p => `<div class="pillar"><div class="pillar-top"><span class="pillar-num">${p.n}</span><span class="pillar-title" style="color:${p.c}">${p.t}</span><span class="pillar-freq" style="color:${p.c}">${p.f}</span></div>${p.it.map(i => `<div class="pi">${i}</div>`).join('')}</div>`).join('');
+                document.getElementById('rules-out').innerHTML = [{
+                    n: '01',
+                    t: '<b>Post before it\'s perfect.</b> Consistent presence beats sporadic perfection. Your first 30 posts are practice not portfolio.'
+                }, {
+                    n: '02',
+                    t: '<b>Use the hook vault every time.</b> Every post starts with a tested hook. Never open with "Hi, today I want to share..."'
+                }, {
+                    n: '03',
+                    t: '<b>Reply to every comment for 60 days.</b> Algorithm rewards engagement. Your future clients are in those comments.'
+                }, {
+                    n: '04',
+                    t: '<b>Every SVTCH post gets a soft CTA.</b> End with: "DM \'BRAND\' to start" or "Link in bio to see how we work."'
+                }, {
+                    n: '05',
+                    t: '<b>Batch create, not daily create.</b> One day per week to create all content for next 7 days. Daily creation = burnout.'
+                }].map(r => `<div class="rule"><div class="rule-n">${r.n}</div><div class="rule-t">${r.t}</div></div>`).join('');
+                document.getElementById('rhythm-out').innerHTML = `<div class="rhy">${[{
+                    d: 'Mon',
+                    t: 'Reel\nProcess'
+                }, {
+                    d: 'Tue',
+                    t: 'Carousel\nBefore/After'
+                }, {
+                    d: 'Wed',
+                    t: 'Reel\nPower Hook'
+                }, {
+                    d: 'Thu',
+                    t: 'YT Short\nRepurpose'
+                }, {
+                    d: 'Fri',
+                    t: 'Carousel\nSVTCH Proof'
+                }, {
+                    d: 'Sat',
+                    t: 'Reel\nBrand POV'
+                }, {
+                    d: 'Sun',
+                    t: 'Batch\nCreate'
+                }].map(d => `<div class="rday"><div class="rday-n">${d.d}</div><div class="rday-t">${d.t.replace('\n', '<br/>')}</div></div>`).join('')}</div>`;
+            }
+
+            // CLIENTS
+            const TIERS = {
+                starter: 12000,
+                growth: 25000,
+                premium: 45000,
+                custom: 0
+            };
+            const TLB = {
+                starter: 'Starter Brand',
+                growth: 'Growth Retainer',
+                premium: 'Premium Partner',
+                custom: 'Custom'
+            };
+            let clients = S.g('svtch_clients', []);
+            function initClients() {
+                rClients();
+            }
+            function addClient() {
+                const n = document.getElementById('cl-n').value.trim();
+                const b = document.getElementById('cl-b').value.trim();
+                const t = document.getElementById('cl-t').value;
+                const cp = document.getElementById('cl-p').value.trim();
+                const st = document.getElementById('cl-s').value;
+                const nt = document.getElementById('cl-nt').value.trim();
+                if (!n) {
+                    toast('Enter a client name first');
+                    return;
+                }
+                const price = cp && parseInt(cp) > 0 ? parseInt(cp) : TIERS[t];
+                clients.push({
+                    id: Date.now().toString(),
+                    n,
+                    b,
+                    t,
+                    price,
+                    st,
+                    nt,
+                    d: new Date().toLocaleDateString('en-IN', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: '2-digit'
+                    })
+                });
+                S.s('svtch_clients', clients);
+                ['cl-n', 'cl-b', 'cl-p', 'cl-nt'].forEach(id => document.getElementById(id).value = '');
+                rClients();
+                toast(n + ' added');
+                uDash();
+            }
+            function delClient(id) {
+                if (!confirm('Remove this client?'))
+                    return;
+                clients = clients.filter(c => c.id !== id);
+                S.s('svtch_clients', clients);
+                rClients();
+                uDash();
+                toast('Client removed');
+            }
+            function rClients() {
+                const el = document.getElementById('cl-list');
+                const active = clients.filter(c => c.st === 'active' || c.st === 'onboarding');
+                const mrr = active.reduce( (s, c) => s + c.price, 0);
+                const bar = document.getElementById('cl-mrr');
+                if (clients.length) {
+                    bar.style.display = 'flex';
+                    document.getElementById('cl-mrr-v').textContent = '₹' + mrr.toLocaleString('en-IN');
+                    document.getElementById('cl-act').textContent = active.length;
+                    const g = Math.max(0, TGT - mrr);
+                    const ge = document.getElementById('cl-gap');
+                    ge.textContent = g === 0 ? '✓ HIT!' : '₹' + g.toLocaleString('en-IN');
+                    ge.style.color = g === 0 ? 'var(--green)' : 'var(--red)';
+                } else {
+                    bar.style.display = 'none';
+                }
+                if (!clients.length) {
+                    el.innerHTML = '<div class="empty">No clients yet.<br/>Add your first one above.</div>';
+                    return;
+                }
+                const SC = {
+                    active: '#1DB87A',
+                    lead: '#E6A817',
+                    onboarding: '#4A9EFF',
+                    completed: '#5E5E5E'
+                };
+                el.innerHTML = clients.map(c => {
+                    const init = c.n.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+                    return `<div class="clc"><div class="cl-av">${init}</div><div class="cl-b"><div class="cl-nm">${c.n}</div><div class="cl-bz">${c.b || '—'} · Added ${c.d}</div>${c.nt ? `<div class="cl-nt">${c.nt}</div>` : ''}<div class="cl-ft"><div class="cl-pr">₹${c.price.toLocaleString('en-IN')}</div><span class="cl-bdg" style="color:${SC[c.st] || '#5E5E5E'};border-color:${SC[c.st] || '#5E5E5E'}30">${c.st}</span><span class="cl-bdg" style="color:var(--ac);border-color:rgba(255,222,88,.2)">${TLB[c.t] || c.t}</span><button class="cl-del" onclick="delClient('${c.id}')">Remove</button></div></div></div>`;
+                }
+                ).join('');
+            }
+
+            // NOTES
+            let ntT;
+            function initNotes() {
+                document.getElementById('nta').value = S.g('svtch_notes', '');
+                document.getElementById('nta').addEventListener('input', () => {
+                    document.getElementById('nt-st').textContent = 'Saving...';
+                    document.getElementById('nt-st').classList.remove('saved');
+                    clearTimeout(ntT);
+                    ntT = setTimeout( () => {
+                        S.s('svtch_notes', document.getElementById('nta').value);
+                        document.getElementById('nt-st').textContent = 'Saved ✓';
+                        document.getElementById('nt-st').classList.add('saved');
+                    }
+                    , 2000);
+                }
+                );
+            }
+            function clearNotes() {
+                if (!confirm('Clear all notes?'))
+                    return;
+                document.getElementById('nta').value = '';
+                S.s('svtch_notes', '');
+                toast('Notes cleared');
+            }
+
+            // DASHBOARD UPDATE
+            function uDash() {
+                const active = clients.filter(c => c.st === 'active' || c.st === 'onboarding');
+                const mrr = active.reduce( (s, c) => s + c.price, 0);
+                const mt = SVCS.reduce( (s, sv, i) => s + sv.p * mxC[i], 0);
+                const tot = Math.max(mrr, mt);
+                const pct = Math.min(100, Math.round(tot / TGT * 100));
+                const gap = Math.max(0, TGT - tot);
+                const dr = document.getElementById('d-rev');
+                if (!dr)
+                    return;
+                dr.textContent = '₹' + tot.toLocaleString('en-IN');
+                document.getElementById('d-clients').textContent = active.length;
+                document.getElementById('d-rev-bar').style.width = pct + '%';
+                document.getElementById('d-rev-pct').textContent = pct + '% of ₹80k';
+                const dg = document.getElementById('d-gap');
+                dg.textContent = gap === 0 ? '✓ HIT!' : '₹' + gap.toLocaleString('en-IN');
+                dg.style.color = gap === 0 ? 'var(--green)' : 'var(--red)';
+            }
+
+            // PLAYBOOK
+            const PBACTS = {
+                '0-0': [{
+                    t: 'Fix your <b>2171 VU Instagram bio</b> right now — one line: "I help [type of client] look premium. SVTCH Creatives. Link below."',
+                    tags: ['urgent', '15 min']
+                }, {
+                    t: 'Set up a <b>Linktree or Bento</b> link-in-bio: SVTCH website · Playbook portfolio · WhatsApp / email',
+                    tags: ['urgent', '30 min']
+                }, {
+                    t: 'Write down <b>every past client and warm contact</b> — Bangs & Crackles, Trion Dental, Shemon, LensPhotoz, Illuminyte contacts. Do not skip anyone.',
+                    tags: ['money', '20 min']
+                }, {
+                    t: 'Send a <b>personal WhatsApp message</b> (not a mass DM — a real one) to 3 people on that list. Not pitching. Just reconnecting: "Hey, working on something new with SVTCH — thought of you."',
+                    tags: ['money', 'urgent']
+                }, {
+                    t: 'Take <b>3 pieces of your best existing work</b> and write one sentence about the result each achieved. This becomes your case study skeleton.',
+                    tags: ['30 min']
+                }, ],
+                '0-1': [{
+                    t: 'Follow up <b>once</b> on the 3 messages from last week. If no reply after this follow-up — move on. Do not chase.',
+                    tags: ['money']
+                }, {
+                    t: 'Send 3 more warm outreach messages. Different angle: <b>"I am taking on 2 new clients this month for SVTCH — wanted to offer you first look."</b>',
+                    tags: ['money', 'urgent']
+                }, {
+                    t: 'Post your <b>first piece of content</b> using a hook from the vault. Done beats perfect every single time. Stop editing after 30 minutes.',
+                    tags: ['content']
+                }, {
+                    t: 'Create your <b>SVTCH Instagram page</b> and post the pitch deck as a carousel — one key slide per day starting with the Problem slide.',
+                    tags: ['content']
+                }, {
+                    t: 'Build a <b>one-page proposal template</b> in Canva or Notion you can fill in under 20 minutes. You will need it fast when someone says yes.',
+                    tags: ['1 hour']
+                }, ],
+                '1-0': [{
+                    t: 'For every active warm conversation: <b>make the ask.</b> "I would love to take on your brand as SVTCH\'s first case study. ₹8k for a Starter Brand package — this month only." Say the number. Out loud.',
+                    tags: ['money', 'urgent']
+                }, {
+                    t: 'If someone says yes — <b>collect 50% upfront</b> before starting any work. No exceptions. This is not rude. It is professional.',
+                    tags: ['money', 'warn']
+                }, {
+                    t: 'If someone says "I will think about it" — <b>give them 48 hours</b> then follow up once. After that, move on to the next prospect.',
+                    tags: ['warn']
+                }, {
+                    t: 'Keep outreach running — add <b>5 new contacts</b> this week. Local Mumbai businesses: clinics, jewellery, cafes, real estate agents with weak social presence.',
+                    tags: ['money']
+                }, {
+                    t: 'Post <b>2 pieces of content</b> this week. One education hook, one personal brand POV. Use the vault. No improvising.',
+                    tags: ['content']
+                }, ],
+                '1-1': [{
+                    t: '<b>Deliver ahead of the promised deadline</b> if possible. First impression as SVTCH matters more than any other.',
+                    tags: ['urgent']
+                }, {
+                    t: 'While working, <b>screenshot every stage</b> — the brief, first draft, revision, final. This becomes your case study content.',
+                    tags: ['money']
+                }, {
+                    t: 'Ask for a <b>written testimonial or voice note</b> on delivery. Say: "Would you mind sending a quick 2-line message about working with us? It helps enormously."',
+                    tags: ['money']
+                }, {
+                    t: '<b>Collect the remaining 50%</b> on delivery. Do not send final files before payment. This is standard. Do not apologise for it.',
+                    tags: ['money', 'warn']
+                }, {
+                    t: 'Write the first draft of your <b>case study</b> — Problem, what you did, result. Even if the result is just "the client loved it", write it. You will expand as results arrive.',
+                    tags: ['1 hour']
+                }, {
+                    t: 'Reach out to <b>3 more new prospects</b>. The pipeline never stops — even when you are delivering work.',
+                    tags: ['money']
+                }, ],
+                '2-0': [{
+                    t: 'Within 48 hours of delivering: <b>pitch the retainer</b> using the script on this page. Do it while client satisfaction is fresh.',
+                    tags: ['money', 'urgent']
+                }, {
+                    t: 'Post the case study as a <b>2171 VU carousel</b>. Before/after format. Hook from the vault. This single post does more for your pipeline than 10 generic design tips.',
+                    tags: ['money', 'content']
+                }, {
+                    t: 'Send your <b>SVTCH pitch deck</b> to 3 warm business contacts who haven\'t seen it yet. Not a cold DM — a real message: "We just launched SVTCH properly — thought you would appreciate seeing what we are building."',
+                    tags: ['money']
+                }, {
+                    t: 'Maintain posting: <b>3 pieces per week minimum.</b> Education, process, personal brand POV. Rotate. Use the hook vault. Do not improvise hooks.',
+                    tags: ['content']
+                }, {
+                    t: 'Set up a <b>Calendly free booking link</b> and put it in your SVTCH bio and website. Make it easy to say yes to a call.',
+                    tags: ['30 min']
+                }, ],
+                '3-0': [{
+                    t: '<b>Retainer client 2</b> is the priority. Use your case study as proof. Reach out to dental clinics, jewellery brands, real estate agents in Mumbai specifically — they have marketing budgets.',
+                    tags: ['money', 'urgent']
+                }, {
+                    t: 'With retainer client 1: deliver so well they <b>refer you without being asked.</b> Then ask anyway: "If you know anyone who needs this, I would love a quick intro."',
+                    tags: ['money']
+                }, {
+                    t: 'Track your content: <b>which posts get saves and shares</b> — not just likes. Saves = useful. Shares = they think others need it. Double down on those formats only.',
+                    tags: ['content']
+                }, {
+                    t: 'When someone comments with genuine interest: <b>DM them to continue the conversation.</b> Not to sell. To connect. Sales happen in DMs, not comments.',
+                    tags: ['money', 'content']
+                }, {
+                    t: 'Not getting retainer traction? <b>Offer a trial month at ₹15k</b>, then ₹25k from month 2. Makes it easy to start. Never go below ₹15k.',
+                    tags: ['warn']
+                }, {
+                    t: 'Reactivate <b>Etsy/Gumroad</b> with 2–3 niche-specific template packs: dental clinic social pack, jewellery brand social pack. One weekend of work. Passive income alongside client work.',
+                    tags: ['money']
+                }, ],
+                '4-0': [{
+                    t: '<b>Replace, do not add.</b> When a low-paying project client wants more work, pitch them the Growth Retainer. Do not maintain 5 small clients — consolidate into 3 retainers.',
+                    tags: ['money', 'urgent']
+                }, {
+                    t: 'Raise your <b>Starter Brand price to ₹15k.</b> You now have case studies. The price reflects that. Anyone who objects wasn\'t the right client.',
+                    tags: ['money']
+                }, {
+                    t: 'By month 5 content should generate <b>1–2 genuine inbound DMs per week.</b> Have a process ready: reply → qualify → send the deck → book a call. No improvising.',
+                    tags: ['content', 'money']
+                }, {
+                    t: 'Apply to be a <b>brand partner or affiliate</b> for tools you actually use — Affinity, Canva, any SaaS you recommend. At 2k+ followers this is realistic. ₹3–8k per post.',
+                    tags: ['money']
+                }, {
+                    t: 'Start documenting <b>every month\'s revenue in writing.</b> Create a simple record. This is proof for the Global Talent Visa application. Treat yourself like a business — because you are one.',
+                    tags: ['warn']
+                }, {
+                    t: 'Month 6: <b>review and cut ruthlessly.</b> Which content format converts? Which client type pays fastest? Which service is easiest to deliver? Do more of those three things only.',
+                    tags: ['urgent']
+                }, ],
+            };
+            let pbState = S.g('svtch_pb', {});
+            function pbTotalActions() {
+                return Object.values(PBACTS).reduce( (s, a) => s + a.length, 0);
+            }
+            function pbDoneCount() {
+                return Object.keys(pbState).filter(k => pbState[k]).length;
+            }
+            function uPbProgress() {
+                const tot = pbTotalActions();
+                const dn = pbDoneCount();
+                const pct = Math.round(dn / tot * 100);
+                const f = document.getElementById('pb-prog-fill');
+                const l = document.getElementById('pb-prog-lbl');
+                if (f)
+                    f.style.width = pct + '%';
+                if (l)
+                    l.textContent = `Playbook progress: ${dn} of ${tot} actions done (${pct}%)`;
+            }
+            function rPbList(listId, key) {
+                const el = document.getElementById(listId);
+                if (!el)
+                    return;
+                const acts = PBACTS[key] || [];
+                el.innerHTML = acts.map( (a, i) => {
+                    const k = key + '_' + i;
+                    const done = pbState[k];
+                    return `<div class="pb-act${done ? ' done' : ''}" id="pbact-${k}" onclick="togglePbAct('${k}','${listId}','${key}')">
+      <div class="pb-ck"></div>
+      <div class="pb-ab">
+        <div class="pb-at">${a.t}</div>
+        <div class="pb-tags">${a.tags.map(tg => `<span class="pb-tag ${tg === 'money' ? 'money' : tg === 'urgent' ? 'urgent' : tg === 'content' ? 'content' : tg === 'warn' ? 'warn' : ''}">${tg}</span>`).join('')}</div>
+      </div>
+    </div>`;
+                }
+                ).join('');
+            }
+            function togglePbAct(k, listId, key) {
+                pbState[k] = !pbState[k];
+                S.s('svtch_pb', pbState);
+                rPbList(listId, key);
+                uPbProgress();
+            }
+            function initPlaybook() {
+                const phaseMap = {
+                    '0': ['0-0', '0-1'],
+                    '1': ['1-0', '1-1'],
+                    '2': ['2-0'],
+                    '3': ['3-0'],
+                    '4': ['4-0']
+                };
+                Object.entries(phaseMap).forEach( ([ph,weeks]) => {
+                    weeks.forEach(wk => {
+                        rPbList('pbal-' + wk, wk);
+                    }
+                    );
+                }
+                );
+                uPbProgress();
+                document.getElementById('pb-phase-nav').querySelectorAll('.pbp').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.pbp').forEach(b => b.classList.remove('on'));
+                        document.querySelectorAll('.pb-phase').forEach(p => p.classList.remove('on'));
+                        btn.classList.add('on');
+                        document.getElementById('pbph-' + btn.dataset.pbph).classList.add('on');
+                    }
+                    );
+                }
+                );
+                document.querySelectorAll('.pb-week-nav').forEach(nav => {
+                    nav.querySelectorAll('.pbw').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            nav.querySelectorAll('.pbw').forEach(b => b.classList.remove('on'));
+                            btn.classList.add('on');
+                            const wk = btn.dataset.pbwk;
+                            document.querySelectorAll('.pb-week').forEach(w => w.classList.remove('on'));
+                            const wel = document.getElementById('pbwk-' + wk);
+                            if (wel)
+                                wel.classList.add('on');
+                        }
+                        );
+                    }
+                    );
+                }
+                );
+            }
+
+            // BOOT
+            initHooks();
+            initRevenue();
+            initRoadmap();
+            initContent();
+            initClients();
+            initNotes();
+            initPlaybook();
+            uDash();
+        </script>
+    </body>
 </html>
